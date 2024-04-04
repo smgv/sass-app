@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --app-primary-900: #233876;
+    --app-primary-800: #1e429f;
+    --app-primary-700: #1a56db;
+    --app-primary-600: #0346ff;
+    --app-primary-500: #3f83f8;
+    --app-primary-400: #76a9fa;
+    --app-primary-300: #a4cafe;
+    --app-primary-200: #c3ddfd;
+    --app-primary-100: #e1effe;
+    --app-primary-50: #ebf5ff;
+
+    --app-gray-900: #111928;
+    --app-gray-800: #1f2a37;
+    --app-gray-700: #374151;
+    --app-gray-600: #4b5563;
+    --app-gray-500: #6b7280;
+    --app-gray-400: #9ca3af;
+    --app-gray-300: #d1d5db;
+    --app-gray-200: #e5e7eb;
+    --app-gray-100: #f3f4f6;
+    --app-gray-50: #f9fafb;
+
+    --app-success: #30cca4;
+    --app-warning: #fbc94a;
+    --app-error: #fb4a61;
+    --app-info: #d4d4d4;
+    --app-white: #ffffff;
+  }
+}
