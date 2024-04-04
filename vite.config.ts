@@ -8,7 +8,6 @@ import viteTsconfigPaths from "vite-tsconfig-paths";
 
 import pkg from "./package.json";
 
-// TODO: code split and load controllers after login
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const { VITE_BUILD_ENV } = loadEnv(mode, process.cwd());
