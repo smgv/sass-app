@@ -4,16 +4,15 @@
 
 @layer base {
   :root {
-    --app-primary-900: #233876;
-    --app-primary-800: #1e429f;
-    --app-primary-700: #1a56db;
-    --app-primary-600: #0346ff;
-    --app-primary-500: #3f83f8;
-    --app-primary-400: #76a9fa;
-    --app-primary-300: #a4cafe;
-    --app-primary-200: #c3ddfd;
-    --app-primary-100: #e1effe;
-    --app-primary-50: #ebf5ff;
+    --app-primary-900: #03045eff;
+    --app-primary-800: #023e8aff;
+    --app-primary-700: #0077b6ff;
+    --app-primary-600: #0096c7ff;
+    --app-primary-500: #00b4d8ff;
+    --app-primary-400: #48cae4ff;
+    --app-primary-300: #90e0efff;
+    --app-primary-200: #ade8f4ff;
+    --app-primary-100: #caf0f8ff;
 
     --app-gray-900: #111928;
     --app-gray-800: #1f2a37;
