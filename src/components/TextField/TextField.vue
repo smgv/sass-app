@@ -86,7 +86,7 @@ const inputContainerClass =
 const inputContainerDisabledClass = "border-gray-400";
 const defaultInputClass =
   "placeholder-gray-400 border-0 focus:outline-none focus:ring-0 text-gray-500 w-full rounded-md";
-const defaultHelperClass = "text-sm text-gray-500";
+const defaultHelperClass = "text-xs text-gray-500";
 
 const inputContainerClassList = computed(() => {
   let classList = [inputContainerClass];

@@ -10,6 +10,7 @@
       >
         Sign Up to access the SASS app
       </p>
+
       <i
         v-if="currentAuthForm === AUTH_FORM.FORGOT_PASSWORD_EMAIL"
         class="mdi mdi-lock-reset text-8xl text-gray-400 font-medium text-center"
@@ -37,6 +38,8 @@
       >
         {{ forgotPasswordText.description }}
       </p>
+
+      <!-- Email -->
       <TextField
         v-if="
           [
@@ -53,6 +56,7 @@
         type="email"
         name="email"
       />
+      <!-- Password -->
       <TextField
         v-if="
           [
@@ -69,6 +73,7 @@
         type="password"
         name="password"
       />
+      <!-- Confirm Password -->
       <TextField
         v-if="
           [AUTH_FORM.REGISTER, AUTH_FORM.FORGOT_PASSWORD_SUBMIT].includes(
@@ -87,8 +92,20 @@
         v-if="currentAuthForm === AUTH_FORM.REGISTER"
         class="text-xs text-gray-400 text-center"
       >
-        By signing up, you agree to our Terms , Privacy Policy and Cookies
-        Policy.
+        By signing up, you agree to our
+        <a
+          href="#"
+          class="text-primary-800 font-medium cursor-pointer hover:underline"
+        >
+          Terms
+        </a>
+        and
+        <a
+          href="#"
+          class="text-primary-800 font-medium cursor-pointer hover:underline"
+        >
+          Privacy Policy
+        </a>
       </p>
       <Button size="md" @click.prevent="handleForm">
         {{ buttonName }}
@@ -118,7 +135,7 @@
         v-if="currentAuthForm === AUTH_FORM.LOGIN"
         variant="text"
         class="text-sm !text-gray-500"
-        @click="currentAuthForm = AUTH_FORM.FORGOT_PASSWORD_EMAIL"
+        @click="handleForgotPassword"
       >
         Forgot password?
       </Button>
@@ -148,14 +165,14 @@
         <Button
           variant="text"
           class="text-sm font-bold"
-          @click="currentAuthForm = AUTH_FORM.REGISTER"
+          @click="handleCreateNewAccount"
         >
           Create new Account
         </Button>
         <Button
           variant="text"
           class="text-sm font-bold"
-          @click="currentAuthForm = AUTH_FORM.LOGIN"
+          @click="handleBackToLogin"
         >
           Back to login
         </Button>
@@ -186,7 +203,7 @@ import {
 } from "@/types/auth";
 import { isConfirmPasswordValid, isPasswordValid } from "@/utils/auth";
 
-const AuthFormData = ref<AuthFormType>(AUTH_FORM_INITIAL_STATE);
+const AuthFormData = ref<AuthFormType>({ ...AUTH_FORM_INITIAL_STATE });
 const currentAuthForm = ref<AUTH_FORM>(AUTH_FORM.LOGIN);
 
 const rules = {
@@ -265,12 +282,14 @@ const forgotPasswordText: ComputedRef<ForgotPasswordTextType> = computed(() => {
 });
 
 const handleAuthForm = () => {
+  AuthFormData.value = { ...AUTH_FORM_INITIAL_STATE };
   currentAuthForm.value =
     currentAuthForm.value === AUTH_FORM.LOGIN
       ? AUTH_FORM.REGISTER
       : currentAuthForm.value === AUTH_FORM.FORGOT_PASSWORD_SUBMIT
       ? AUTH_FORM.FORGOT_PASSWORD_EMAIL
       : AUTH_FORM.LOGIN;
+  v$.value.$reset();
 };
 
 const handleForm = async () => {
@@ -289,6 +308,25 @@ const handleForm = async () => {
   if (currentAuthForm.value === AUTH_FORM.FORGOT_PASSWORD_SUBMIT) {
     console.log("Submit", AuthFormData.value);
   }
+  AuthFormData.value = { ...AUTH_FORM_INITIAL_STATE };
+  v$.value.$reset();
+};
+
+const handleBackToLogin = () => {
+  currentAuthForm.value = AUTH_FORM.LOGIN;
+  AuthFormData.value = { ...AUTH_FORM_INITIAL_STATE };
+  v$.value.$reset();
+};
+
+const handleCreateNewAccount = () => {
+  currentAuthForm.value = AUTH_FORM.REGISTER;
+  AuthFormData.value = { ...AUTH_FORM_INITIAL_STATE };
+  v$.value.$reset();
+};
+
+const handleForgotPassword = () => {
+  currentAuthForm.value = AUTH_FORM.FORGOT_PASSWORD_EMAIL;
+  AuthFormData.value = { ...AUTH_FORM_INITIAL_STATE };
   v$.value.$reset();
 };
 </script>
