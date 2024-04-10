@@ -35,26 +35,26 @@ export interface ButtonProps extends /* @vue-ignore */ ButtonHTMLAttributes {
 
 const props = withDefaults(defineProps<ButtonProps>(), {
   variant: "default",
-  loading: true,
+  loading: false,
   size: "sm",
   uppercase: false,
   block: true,
   pill: true,
-  disabled: true,
+  disabled: false,
 });
 
 const variantClass = computed(() => {
   let btnClass = `bg-primary-900 text-white hover:bg-primary-800 
-    hover:shadow-lg hover:translate-y-0.5 
-    disabled:bg-gray-500 hover:disabled:shadow-none hover:disabled:translate-y-0 disabled:cursor-not-allowed`;
+    hover:shadow-lg
+    disabled:bg-gray-500 hover:disabled:shadow-none disabled:cursor-not-allowed`;
 
   if (props.variant === "outlined") {
     btnClass =
-      "border border-primary-900 text-primary-900 hover:border-primary-800 hover:text-primary-800 hover:shadow-lg hover:translate-y-0.5";
+      "border border-primary-900 text-primary-900 hover:border-primary-800 hover:text-primary-800 hover:shadow-lg";
   }
 
   if (props.variant === "text") {
-    btnClass = "text-primary-900 hover:text-primary-800";
+    btnClass = "text-primary-900";
   }
 
   return btnClass;
@@ -72,7 +72,7 @@ const sizeClass = computed(() => {
   }
 
   if (props.variant === "text") {
-    btnClass = "px-0";
+    btnClass = "px-0 w-auto text-lg font-medium";
   }
 
   return btnClass;
