@@ -72,7 +72,7 @@ const sizeClass = computed(() => {
   }
 
   if (props.variant === "text") {
-    btnClass = "px-0 w-auto text-lg font-medium";
+    btnClass = "px-0 !w-auto text-lg font-medium";
   }
 
   return btnClass;

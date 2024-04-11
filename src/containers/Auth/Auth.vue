@@ -147,7 +147,7 @@
       </div>
       <p
         v-if="[AUTH_FORM.REGISTER, AUTH_FORM.LOGIN].includes(currentAuthForm)"
-        class="flex gap-2 items-center justify-center text-sm"
+        class="flex gap-1 items-center justify-center text-sm"
       >
         {{ switchAccountText.description }}
         <Button
@@ -179,7 +179,7 @@
       </div>
     </form>
 
-    <p class="text-sm mt-6 text-gray-600 font-medium">© 2024 SASS App</p>
+    <Footer />
   </div>
 </template>
 
@@ -190,6 +190,7 @@ import { email, helpers } from "@vuelidate/validators";
 
 import TextField from "@/components/TextField";
 import Button from "@/components/Button";
+import Footer from "@/components/Footer";
 
 import {
   AUTH_FORM,
