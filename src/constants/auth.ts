@@ -1,3 +1,4 @@
+import { OptionsType } from "@/components/Select/Select.vue";
 import { AuthFormType } from "@/types/auth";
 
 export enum AUTH_FORM {
@@ -8,6 +9,7 @@ export enum AUTH_FORM {
 }
 
 export const AUTH_FORM_INITIAL_STATE: AuthFormType = {
+  role: "admin",
   email: "",
   password: "",
   confirmPassword: "",
@@ -15,3 +17,9 @@ export const AUTH_FORM_INITIAL_STATE: AuthFormType = {
 
 export const PASSWORD_HELPER_TEXT =
   "Your password must be at least six characters and should include a combination of numbers, letters and special characters (!$@％).";
+
+export const ROLES: OptionsType[] = [
+  { name: "Admin", value: "admin" },
+  { name: "Employee", value: "employee" },
+  { name: "Member", value: "member" },
+];

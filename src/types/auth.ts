@@ -1,4 +1,5 @@
 export type AuthFormType = {
+  role: "admin" | "member" | "employee";
   email: string;
   password: string;
   confirmPassword: string;

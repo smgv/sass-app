@@ -38,7 +38,13 @@
       >
         {{ forgotPasswordText.description }}
       </p>
-
+      <!-- Role -->
+      <Select
+        v-if="[AUTH_FORM.LOGIN].includes(currentAuthForm)"
+        label="Role"
+        :options="ROLES"
+        v-model="AuthFormData.role"
+      />
       <!-- Email -->
       <TextField
         v-if="
@@ -191,11 +197,13 @@ import { email, helpers } from "@vuelidate/validators";
 import TextField from "@/components/TextField";
 import Button from "@/components/Button";
 import Footer from "@/components/Footer";
+import Select from "@/components/Select";
 
 import {
   AUTH_FORM,
   AUTH_FORM_INITIAL_STATE,
   PASSWORD_HELPER_TEXT,
+  ROLES,
 } from "@/constants/auth";
 import {
   AuthFormType,
