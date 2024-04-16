@@ -34,6 +34,10 @@
     --app-white: #ffffff;
   }
 
+  * {
+    box-sizing: border-box;
+  }
+
   body,
   * {
     font-family: Andika;
