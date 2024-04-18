@@ -195,7 +195,14 @@
     >
       <Button size="md" @click.prevent.stop="handleOnboardingForm">Next</Button>
     </div>
-    <Footer />
+    <Footer
+      :class="[
+        {
+          '!-mt-3 sm:!mt-6':
+            currentOnboardingState === MEMBER_EMPLOYEE_FORM.ONBOARDING,
+        },
+      ]"
+    />
   </div>
 </template>
 
