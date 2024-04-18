@@ -58,7 +58,7 @@ export interface TextFieldProps extends /* @vue-ignore */ InputHTMLAttributes {
   type?: InputHTMLAttributes["type"];
   disabled?: InputHTMLAttributes["disabled"];
   icon?: string;
-  modelValue?: string;
+  modelValue?: string | number;
 }
 const props = withDefaults(defineProps<TextFieldProps>(), {
   label: "",
@@ -74,7 +74,9 @@ const props = withDefaults(defineProps<TextFieldProps>(), {
 const emits = defineEmits(["onIconClick", "update:modelValue"]);
 
 const value = computed({
-  get: () => props.modelValue,
+  get: () => {
+    if (props.modelValue) return props.modelValue;
+  },
   set: (value2) => emits("update:modelValue", value2),
 });
 

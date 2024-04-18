@@ -73,7 +73,11 @@
         "
         v-model="AuthFormData.password"
         :error="v$.password?.$error"
-        :helper-text="v$.password?.$error ? (v$.password?.$errors[0]?.$message as string) : PASSWORD_HELPER_TEXT"
+        :helper-text="v$.password?.$error ? (v$.password?.$errors[0]?.$message as string) :
+        [
+            AUTH_FORM.FORGOT_PASSWORD_SUBMIT,
+            AUTH_FORM.REGISTER,
+          ].includes(currentAuthForm) ? PASSWORD_HELPER_TEXT : ''"
         label="Password"
         placeholder="Please enter password"
         type="password"
@@ -159,7 +163,7 @@
         <Button
           variant="text"
           :class="['text-sm']"
-          @click.prevent="handleAuthForm"
+          @click.prevent="handleSwitchAuthForm"
         >
           {{ switchAccountText.btnText }}
         </Button>
@@ -233,6 +237,8 @@ const rules = {
       (value: string) => {
         if ([AUTH_FORM.FORGOT_PASSWORD_EMAIL].includes(currentAuthForm.value))
           return true;
+        if ([AUTH_FORM.LOGIN].includes(currentAuthForm.value))
+          return value !== "";
         return isPasswordValid(value);
       }
     ),
@@ -290,7 +296,7 @@ const forgotPasswordText: ComputedRef<ForgotPasswordTextType> = computed(() => {
   return { description, title };
 });
 
-const handleAuthForm = () => {
+const handleSwitchAuthForm = () => {
   AuthFormData.value = { ...AUTH_FORM_INITIAL_STATE };
   currentAuthForm.value =
     currentAuthForm.value === AUTH_FORM.LOGIN
@@ -313,6 +319,7 @@ const handleForm = async () => {
   }
   if (currentAuthForm.value === AUTH_FORM.FORGOT_PASSWORD_EMAIL) {
     console.log("Email", AuthFormData.value);
+    currentAuthForm.value = AUTH_FORM.FORGOT_PASSWORD_SUBMIT;
   }
   if (currentAuthForm.value === AUTH_FORM.FORGOT_PASSWORD_SUBMIT) {
     console.log("Submit", AuthFormData.value);
