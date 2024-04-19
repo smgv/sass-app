@@ -420,3 +420,12 @@ const handlePasswordForm = async () => {
 </script>
 
 <style scoped></style>
+
+<!-- TODO: 
+1. will take the searchParams which we will get in form of base64params that contains:
+admin objectId
+users email
+
+2. if route doesn't have the objectId and mail it will not show the form will show it as the Invalid Link
+on mount will check those parameters
+-->

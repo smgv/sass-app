@@ -1,7 +1,9 @@
 <template>
-  <div>Dashboard Page</div>
+  <Dashboard />
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Dashboard from "@/containers/Dashboard";
+</script>
 
 <style scoped></style>
