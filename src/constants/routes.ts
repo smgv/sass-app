@@ -6,7 +6,7 @@ export const ROUTES_NAME = {
   ADMIN_ONBOARDING: "admin-onboarding",
   MEMBER_ONBOARDING: "member-onboarding",
   EMPLOYEE_ONBOARDING: "employee-onboarding",
-  DASHBOARD: "dashboard",
+  ADMIN: "admin",
 };
 
 export const ROUTES = {
@@ -15,5 +15,5 @@ export const ROUTES = {
   ADMIN_ONBOARDING: "/admin-onboarding",
   MEMBER_ONBOARDING: "/member-onboarding",
   EMPLOYEE_ONBOARDING: "/employee-onboarding",
-  DASHBOARD: "/dashboard",
+  ADMIN: "/admin",
 };

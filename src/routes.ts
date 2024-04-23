@@ -31,9 +31,45 @@ const router = createRouter({
       component: () => import("@/views/EmployeeMemberOnboarding.vue"),
     },
     {
-      path: ROUTES.DASHBOARD,
-      name: ROUTES_NAME.DASHBOARD,
-      component: () => import("@/views/Dashboard.vue"),
+      path: ROUTES.ADMIN,
+      name: ROUTES_NAME.ADMIN,
+      component: () => import("@/views/Admin.vue"),
+      children: [
+        {
+          path: "",
+          redirect: "admin/home",
+        },
+        {
+          path: "home",
+          name: "home",
+          component: () => import("@/containers/Admin/Home"),
+        },
+        {
+          path: "invite",
+          name: "invite",
+          component: () => import("@/containers/Admin/Invite"),
+        },
+        {
+          path: "notifications",
+          name: "notifications",
+          component: () => import("@/containers/Admin/Notifications"),
+        },
+        {
+          path: "members",
+          name: "members",
+          component: () => import("@/containers/Admin/Members"),
+        },
+        {
+          path: "employees",
+          name: "employees",
+          component: () => import("@/containers/Admin/Employees"),
+        },
+        {
+          path: "account",
+          name: "account",
+          component: () => import("@/containers/Admin/Account"),
+        },
+      ],
     },
     {
       path: "/:pathMatch(.*)*",

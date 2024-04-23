@@ -1,9 +1,10 @@
 <template>
-  <Dashboard />
+  <Admin />
 </template>
 
 <script setup lang="ts">
-import Dashboard from "@/containers/Dashboard";
+import Admin from "@/containers/Admin";
 </script>
 
 <style scoped></style>
+@/containers/Admin/Dashboard

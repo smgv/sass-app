@@ -33,6 +33,7 @@ export default {
         error: "var(--app-error)",
         info: "var(--app-info)",
         white: "var(--app-white)",
+        gold: "var(--app-gold)",
       },
     },
   },
