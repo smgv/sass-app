@@ -1,5 +1,5 @@
 <template>
-  <aside class="flex flex-col w-[250px] bg-primary-900 text-white p-6">
+  <aside class="flex flex-col w-[250px] bg-primary-900 text-white p-6 h-full">
     <p class="text-xl font-normal">SASS APP</p>
     <div class="h-0.5 w-full bg-gold my-6" />
     <ul class="flex flex-grow flex-col gap-5 text-lg">
@@ -40,10 +40,10 @@ const adminNavItems = [
   { title: "Home", icon: "home", routeName: "home", to: "home" },
   { title: "Invite", icon: "at", routeName: "invite", to: "invite" },
   {
-    title: "Notifications",
+    title: "Inbox",
     icon: "bell-badge",
-    routeName: "notifications",
-    to: "notifications",
+    routeName: "inbox",
+    to: "inbox",
   },
   {
     title: "Members",

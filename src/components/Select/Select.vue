@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col flex-start gap-2">
-    <label v-if="label" :for="label" class="text-base capitalize text-gray-500">
+    <label v-if="label" :for="label" class="text-base text-gray-500">
       {{ label }}
       <span v-if="required" class="text-red-500 text-medium">*</span>
     </label>

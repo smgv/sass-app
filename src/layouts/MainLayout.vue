@@ -5,12 +5,12 @@
       <SideNavbar></SideNavbar>
     </Sidebar>
     <!-- Desktop View -->
-    <section class="hidden sm:flex">
+    <section class="hidden sm:flex sm:fixed sm:top-0 sm:left-0 sm:h-full">
       <SideNavbar></SideNavbar>
     </section>
-    <main class="flex flex-col flex-1">
+    <main class="flex flex-col flex-1 sm:ml-[250px]">
       <nav
-        class="h-16 bg-primary-900 px-6 py-3 flex sm:hidden items-center justify-between text-white"
+        class="h-16 bg-primary-900 px-6 py-3 flex sm:hidden items-center justify-between text-white fixed w-full z-10"
       >
         <p>SASS APP</p>
         <i
@@ -22,7 +22,7 @@
           @click="openSidebar = !openSidebar"
         />
       </nav>
-      <section class="flex-grow p-6">
+      <section class="flex-grow p-6 w-full mt-16 sm:mt-0">
         <slot></slot>
       </section>
     </main>

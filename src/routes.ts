@@ -50,9 +50,9 @@ const router = createRouter({
           component: () => import("@/containers/Admin/Invite"),
         },
         {
-          path: "notifications",
-          name: "notifications",
-          component: () => import("@/containers/Admin/Notifications"),
+          path: "inbox",
+          name: "inbox",
+          component: () => import("@/containers/Admin/Inbox"),
         },
         {
           path: "members",
