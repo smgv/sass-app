@@ -97,15 +97,11 @@ const router = createRouter({
 
 router.beforeEach((to, _, next) => {
   const authStore = useAuthStore();
-  console.log("ROUTES", authStore.isAuthenticated(), to);
+  // console.log("ROUTES", authStore.isAuthenticated(), to);
   if (to.meta.requiresAuth && !authStore.isAuthenticated()) {
     next({ path: ROUTES.DEFAULT });
   } else {
-    if (authStore.isUserOnBoarded()) {
-      next({ path: ROUTES.ADMIN });
-    } else {
-      next();
-    }
+    next();
   }
 });
 
