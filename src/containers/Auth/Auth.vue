@@ -17,34 +17,27 @@
       >
       </i>
       <p
-        v-if="
-          [
-            AUTH_FORM.FORGOT_PASSWORD_SUBMIT,
-            AUTH_FORM.FORGOT_PASSWORD_EMAIL,
-          ].includes(currentAuthForm)
-        "
+        v-if="[AUTH_FORM.FORGOT_PASSWORD_EMAIL].includes(currentAuthForm)"
         class="text-base text-gray-500 font-bold text-center"
       >
         {{ forgotPasswordText.title }}
       </p>
       <p
         v-if="
-          [
-            AUTH_FORM.FORGOT_PASSWORD_SUBMIT,
-            AUTH_FORM.FORGOT_PASSWORD_EMAIL,
-          ].includes(currentAuthForm) && forgotPasswordText.description
+          [AUTH_FORM.FORGOT_PASSWORD_EMAIL].includes(currentAuthForm) &&
+          forgotPasswordText.description
         "
         class="text-sm text-gray-400 text-center -mt-2"
       >
         {{ forgotPasswordText.description }}
       </p>
       <!-- Role -->
-      <Select
+      <!-- <Select
         v-if="[AUTH_FORM.LOGIN].includes(currentAuthForm)"
         label="Role"
         :options="ROLES"
         v-model="AuthFormData.role"
-      />
+      /> -->
       <!-- Email -->
       <TextField
         v-if="
@@ -64,18 +57,12 @@
       />
       <!-- Password -->
       <TextField
-        v-if="
-          [
-            AUTH_FORM.LOGIN,
-            AUTH_FORM.FORGOT_PASSWORD_SUBMIT,
-            AUTH_FORM.REGISTER,
-          ].includes(currentAuthForm)
-        "
+        v-if="[AUTH_FORM.LOGIN, AUTH_FORM.REGISTER].includes(currentAuthForm)"
         v-model="AuthFormData.password"
         :error="v$.password?.$error"
         :helper-text="v$.password?.$error ? (v$.password?.$errors[0]?.$message as string) :
         [
-            AUTH_FORM.FORGOT_PASSWORD_SUBMIT,
+            
             AUTH_FORM.REGISTER,
           ].includes(currentAuthForm) ? PASSWORD_HELPER_TEXT : ''"
         label="Password"
@@ -85,11 +72,7 @@
       />
       <!-- Confirm Password -->
       <TextField
-        v-if="
-          [AUTH_FORM.REGISTER, AUTH_FORM.FORGOT_PASSWORD_SUBMIT].includes(
-            currentAuthForm
-          )
-        "
+        v-if="[AUTH_FORM.REGISTER].includes(currentAuthForm)"
         v-model="AuthFormData.confirmPassword"
         :error="v$.confirmPassword?.$error"
         :helper-text="v$.confirmPassword?.$error ? (v$.confirmPassword?.$errors[0]?.$message as string) : ''"
@@ -117,7 +100,7 @@
           Privacy Policy
         </a>
       </p>
-      <Button size="md" @click.prevent="handleForm">
+      <Button size="md" @click.prevent="handleForm" :loading="loading">
         {{ buttonName }}
       </Button>
       <div
@@ -201,13 +184,11 @@ import { email, helpers } from "@vuelidate/validators";
 import TextField from "@/components/TextField";
 import Button from "@/components/Button";
 import Footer from "@/components/Footer";
-import Select from "@/components/Select";
 
 import {
   AUTH_FORM,
   AUTH_FORM_INITIAL_STATE,
   PASSWORD_HELPER_TEXT,
-  ROLES,
 } from "@/constants/auth";
 import {
   AuthFormType,
@@ -215,17 +196,19 @@ import {
   SwitchAccountTextType,
 } from "@/types/auth";
 import { isConfirmPasswordValid, isPasswordValid } from "@/utils/auth";
+import { useAuthStore } from "@/store/authStore";
 
 const AuthFormData = ref<AuthFormType>({ ...AUTH_FORM_INITIAL_STATE });
 const currentAuthForm = ref<AUTH_FORM>(AUTH_FORM.LOGIN);
+
+const authStore = useAuthStore();
+const loading = ref(false);
 
 const rules = {
   email: {
     valid: helpers.withMessage(
       "Please enter your email id",
       (value: string) => {
-        if ([AUTH_FORM.FORGOT_PASSWORD_SUBMIT].includes(currentAuthForm.value))
-          return true;
         return value !== "";
       }
     ),
@@ -270,7 +253,7 @@ const buttonName = computed(() => {
     name = "Sign In";
   }
   if (currentAuthForm.value === AUTH_FORM.FORGOT_PASSWORD_EMAIL) {
-    name = "Send Login Link";
+    name = "Send Reset Link";
   }
   return name;
 });
@@ -289,10 +272,6 @@ const forgotPasswordText: ComputedRef<ForgotPasswordTextType> = computed(() => {
   let title = "Trouble logging in?";
   let description =
     "Enter your email and we'll send you a link to get back into your account.";
-  if (currentAuthForm.value === AUTH_FORM.FORGOT_PASSWORD_SUBMIT) {
-    title = "Create a strong password";
-    description = "";
-  }
   return { description, title };
 });
 
@@ -301,31 +280,38 @@ const handleSwitchAuthForm = () => {
   currentAuthForm.value =
     currentAuthForm.value === AUTH_FORM.LOGIN
       ? AUTH_FORM.REGISTER
-      : currentAuthForm.value === AUTH_FORM.FORGOT_PASSWORD_SUBMIT
-      ? AUTH_FORM.FORGOT_PASSWORD_EMAIL
       : AUTH_FORM.LOGIN;
   v$.value.$reset();
 };
 
 const handleForm = async () => {
-  const isValid = await v$.value.$validate();
-  if (!isValid) return;
+  try {
+    loading.value = true;
+    const isValid = await v$.value.$validate();
+    if (!isValid) return;
 
-  if (currentAuthForm.value === AUTH_FORM.LOGIN) {
-    console.log("Login", AuthFormData.value);
+    const { email, password } = AuthFormData.value;
+    let isSuccess = false;
+
+    if (currentAuthForm.value === AUTH_FORM.LOGIN) {
+      isSuccess = await authStore.signIn({ email, password });
+    }
+    if (currentAuthForm.value === AUTH_FORM.REGISTER) {
+      isSuccess = await authStore.signUp({ email, password });
+    }
+    if (currentAuthForm.value === AUTH_FORM.FORGOT_PASSWORD_EMAIL) {
+      isSuccess = await authStore.forgotPassword(email);
+    }
+
+    if (isSuccess) {
+      AuthFormData.value = { ...AUTH_FORM_INITIAL_STATE };
+      v$.value.$reset();
+    }
+  } catch (error) {
+    console.error("Handle Form", error);
+  } finally {
+    loading.value = false;
   }
-  if (currentAuthForm.value === AUTH_FORM.REGISTER) {
-    console.log("Register", AuthFormData.value);
-  }
-  if (currentAuthForm.value === AUTH_FORM.FORGOT_PASSWORD_EMAIL) {
-    console.log("Email", AuthFormData.value);
-    currentAuthForm.value = AUTH_FORM.FORGOT_PASSWORD_SUBMIT;
-  }
-  if (currentAuthForm.value === AUTH_FORM.FORGOT_PASSWORD_SUBMIT) {
-    console.log("Submit", AuthFormData.value);
-  }
-  AuthFormData.value = { ...AUTH_FORM_INITIAL_STATE };
-  v$.value.$reset();
 };
 
 const handleBackToLogin = () => {

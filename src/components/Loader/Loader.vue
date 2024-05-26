@@ -5,7 +5,7 @@
   >
     <div
       :class="[
-        'loader ease-linear rounded-full border-4 border-t-4 border-primary-200',
+        'loader ease-linear rounded-full border-4 border-t-4 border-primary-200 w-',
         loaderSizeClass,
       ]"
     ></div>
@@ -28,27 +28,27 @@ const loaderSizeClass = computed(() => {
   let sizeClass = "w-5 h-5 border-2 border-t-2";
 
   if (props.size === "sm") {
-    sizeClass = "w-10 h-10";
+    sizeClass = "w-7 h-7";
   }
 
   if (props.size === "md") {
-    sizeClass = "w-14 h-14";
+    sizeClass = "w-10 h-10";
   }
 
   if (props.size === "lg") {
-    sizeClass = "w-20 h-20";
+    sizeClass = "w-16 h-16";
   }
 
   if (props.size === "xl") {
-    sizeClass = "w-24 h-24";
+    sizeClass = "w-20 h-20";
   }
 
   if (props.size === "2xl") {
-    sizeClass = "w-28 h-28";
+    sizeClass = "w-24 h-24";
   }
 
   if (props.size === "3xl") {
-    sizeClass = "w-32 h-32";
+    sizeClass = "w-28 h-28";
   }
 
   return sizeClass;

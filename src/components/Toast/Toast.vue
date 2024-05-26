@@ -1,13 +1,13 @@
 <template>
   <transition name="fade">
-    <div v-if="showSnackBar" :class="[snackbarClasses]">
+    <div v-if="toastMessage.message" :class="[ToastClasses]">
       <div class="flex items-center justify-between w-full">
         <div class="flex items-center">
           <span :class="[iconClasses]"></span>
-          <span class="ml-2">{{ message }}</span>
+          <span class="ml-2">{{ toastMessage.message }}</span>
         </div>
         <button
-          @click="hideSnackbar"
+          @click="deleteToastMessage"
           class="text-gray-500 focus:outline-none hover:text-gray-700"
         >
           <svg
@@ -30,35 +30,34 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, watch } from "vue";
+import { useToastStore } from "@/store/toastStore";
 
-const props = withDefaults(
-  defineProps<{
-    show?: boolean;
-    type: "success" | "warning" | "failed";
-    message?: string;
-  }>(),
-  {
-    show: false,
-    type: "success",
-    message: "",
+const toastStore = useToastStore();
+
+const timeoutTimer = ref(0);
+
+const toastMessage = computed(() => {
+  return toastStore.toastMessage;
+});
+
+const deleteToastMessage = () => {
+  toastStore.setToastMessage({ message: "" });
+  clearTimeout(timeoutTimer.value);
+};
+
+watch(toastMessage.value, (val) => {
+  if (val.message) {
+    timeoutTimer.value = window.setTimeout(() => {
+      deleteToastMessage();
+    }, 7000);
   }
-);
-
-const showSnackBar = ref(props.show);
-
-watch(
-  () => props.show,
-  () => {
-    showSnackBar.value = props.show;
-  }
-);
-
-const snackbarClasses = computed(() => {
+});
+const ToastClasses = computed(() => {
   return {
-    "bg-green-500": props.type === "success",
-    "bg-yellow-500": props.type === "warning",
-    "bg-red-500": props.type === "failed",
+    "bg-green-500": toastMessage.value.type === "success",
+    "bg-yellow-500": toastMessage.value.type === "warning",
+    "bg-red-500": toastMessage.value.type === "failed",
     "text-white": true,
     "px-4": true,
     "py-2": true,
@@ -78,20 +77,10 @@ const iconClasses = computed(() => {
     "w-5": true,
     "fill-current": true,
     "rounded-full": true,
-    "bg-white": props.type === "success",
-    "bg-yellow-100": props.type === "warning",
-    "bg-red-100": props.type === "failed",
+    "bg-white": toastMessage.value.type === "success",
+    "bg-yellow-100": toastMessage.value.type === "warning",
+    "bg-red-100": toastMessage.value.type === "failed",
   };
-});
-
-const hideSnackbar = () => {
-  showSnackBar.value = false;
-};
-
-onMounted(() => {
-  setTimeout(() => {
-    showSnackBar.value = false;
-  }, 3000); // Hide after 3 seconds
 });
 </script>
 

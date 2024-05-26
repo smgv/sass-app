@@ -1,3 +1,5 @@
+import { getItemInLocalStorage } from "./storage";
+
 export const isPasswordValid = (password: string) => {
   if (!password) return false;
   const passwordRegex =
@@ -11,4 +13,19 @@ export const isConfirmPasswordValid = (
 ) => {
   if (!confirmPassword) return false;
   return confirmPassword === password;
+};
+
+export const getUserFromLocal = () => {
+  const user = getItemInLocalStorage("__persisted__auth");
+  return user || null;
+};
+
+export const getTokenFromLocal = () => {
+  const token = getItemInLocalStorage("__persisted__auth");
+  return token || null;
+};
+
+export const userOnboardingStatus = () => {
+  const data = getItemInLocalStorage("__persisted__auth");
+  return data?.userAuth?.onboardingId !== null;
 };

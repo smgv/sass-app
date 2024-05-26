@@ -12,10 +12,10 @@
         'opacity-35': disabled,
       },
     ]"
-    :disabled="disabled"
+    :disabled="disabled || isLoading"
   >
     <Loader :size="loaderSize" :loading="isLoading" />
-    <slot></slot>
+    <slot v-if="!isLoading"></slot>
   </button>
 </template>
 

@@ -5,11 +5,9 @@ export enum AUTH_FORM {
   LOGIN = "Login",
   REGISTER = "Register",
   FORGOT_PASSWORD_EMAIL = "Forgot_Password_Email",
-  FORGOT_PASSWORD_SUBMIT = "Forgot_Password_Submit",
 }
 
 export const AUTH_FORM_INITIAL_STATE: AuthFormType = {
-  role: "admin",
   email: "",
   password: "",
   confirmPassword: "",

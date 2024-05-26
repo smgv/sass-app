@@ -11,6 +11,19 @@
 
 <script setup lang="ts">
 import Loader from "@/components/Loader";
+import { useAuthStore } from "@/store/authStore";
+import { onMounted } from "vue";
+import { useRoute } from "vue-router";
+
+const routes = useRoute();
+
+const { verifyUser } = useAuthStore();
+
+onMounted(async () => {
+  const { params } = routes;
+  console.log(params, "params");
+  await verifyUser(params.token as string);
+});
 </script>
 
 <style scoped></style>

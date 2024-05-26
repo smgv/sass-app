@@ -141,7 +141,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { helpers } from "@vuelidate/validators";
 import useValidate from "@vuelidate/core";
 
@@ -152,8 +152,17 @@ import Footer from "@/components/Footer";
 
 import { AdminFormType } from "@/types/onboarding";
 import { ADMIN_FORM_INITIAL_STATE } from "@/constants/onboarding";
+import { useAuthStore } from "@/store/authStore";
 
 const AdminFormData = ref<AdminFormType>({ ...ADMIN_FORM_INITIAL_STATE });
+
+const authStore = useAuthStore();
+
+onMounted(async () => {
+  const res = await authStore.getUser();
+  console.log(res, "USER");
+  console.log(authStore.userAuth, authStore.tokenAuth);
+});
 
 const rules = {
   name: {
