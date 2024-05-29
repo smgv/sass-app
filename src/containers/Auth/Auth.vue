@@ -298,6 +298,7 @@ const handleForm = async () => {
     }
     if (currentAuthForm.value === AUTH_FORM.REGISTER) {
       isSuccess = await authStore.signUp({ email, password });
+      currentAuthForm.value = AUTH_FORM.LOGIN;
     }
     if (currentAuthForm.value === AUTH_FORM.FORGOT_PASSWORD_EMAIL) {
       isSuccess = await authStore.forgotPassword(email);
@@ -308,7 +309,7 @@ const handleForm = async () => {
       v$.value.$reset();
     }
   } catch (error) {
-    console.error("Handle Form", error);
+    console.error("Auth Handle Form", currentAuthForm.value, error);
   } finally {
     loading.value = false;
   }

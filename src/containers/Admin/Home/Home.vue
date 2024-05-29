@@ -2,7 +2,7 @@
   <div class="w-full">
     <!-- Heading -->
     <h4 class="text-xl sm:text-3xl font-bold sm:font-medium w-max">
-      Welcome, Ganesh Patra
+      Welcome, {{ adminName }}
     </h4>
 
     <!-- Data Cards -->
@@ -17,7 +17,7 @@
           class="text-2xl font-semibold gap-3 text-center flex items-center justify-center"
         >
           <i class="mdi mdi-account-multiple text-3xl" />
-          <p>10</p>
+          <p>{{ noOfEmployees }}</p>
         </div>
       </div>
       <div
@@ -28,7 +28,7 @@
           class="text-2xl font-semibold gap-3 text-center flex items-center justify-center"
         >
           <i class="mdi mdi-account-group text-3xl" />
-          <p>50</p>
+          <p>{{ noOfMembers }}</p>
         </div>
       </div>
     </div>
@@ -288,6 +288,25 @@
 
 <script setup lang="ts">
 import Button from "@/components/Button";
+import { useAdminStore } from "@/store/adminStore";
+import { useAuthStore } from "@/store/authStore";
+import { onMounted, ref } from "vue";
+
+const authStore = useAuthStore();
+const { userAuth } = authStore;
+const adminStore = useAdminStore();
+
+const adminName = ref("");
+const noOfEmployees = ref(0);
+const noOfMembers = ref(0);
+
+onMounted(async () => {
+  try {
+    const id = userAuth?.onboardingId || "";
+    const response = await adminStore.getAdminDetails(id);
+    adminName.value = response?.name || userAuth?.email || "";
+  } catch (error) {}
+});
 </script>
 
 <style scoped>

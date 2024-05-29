@@ -1,7 +1,7 @@
 export type AdminFormType = {
   name: string;
   ownerName: string;
-  pincode: number;
+  pinCode: number;
   locality: string;
   address: string;
   city: string;
@@ -15,7 +15,7 @@ export type AdminFormType = {
 export type MemberEmployeeFormType = {
   fullName: string;
   role: "member" | "employee";
-  pincode: number;
+  pinCode: number;
   locality: string;
   address: string;
   city: string;

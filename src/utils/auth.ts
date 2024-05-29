@@ -16,16 +16,16 @@ export const isConfirmPasswordValid = (
 };
 
 export const getUserFromLocal = () => {
-  const user = getItemInLocalStorage("__persisted__auth");
+  const user = getItemInLocalStorage("__persisted__sass_app_auth");
   return user || null;
 };
 
 export const getTokenFromLocal = () => {
-  const token = getItemInLocalStorage("__persisted__auth");
-  return token || null;
+  const token = getItemInLocalStorage("__persisted__sass_app_auth");
+  return token.tokenAuth || null;
 };
 
 export const userOnboardingStatus = () => {
-  const data = getItemInLocalStorage("__persisted__auth");
-  return data?.userAuth?.onboardingId !== null;
+  const data = getItemInLocalStorage("__persisted__sass_app_auth");
+  return data?.userAuth?.onboardingId;
 };

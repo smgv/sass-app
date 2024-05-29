@@ -97,7 +97,7 @@ const router = createRouter({
 
 router.beforeEach((to, _, next) => {
   const authStore = useAuthStore();
-  // console.log("ROUTES", authStore.isAuthenticated(), to);
+  console.log("ROUTES", authStore.isUserOnBoarded());
   if (to.meta.requiresAuth && !authStore.isAuthenticated()) {
     next({ path: ROUTES.DEFAULT });
   } else {

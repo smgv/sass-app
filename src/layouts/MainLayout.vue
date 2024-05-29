@@ -2,11 +2,11 @@
   <div class="h-screen w-full flex relative">
     <!-- Mobile View -->
     <Sidebar :open="openSidebar" @on-close="openSidebar = false">
-      <SideNavbar></SideNavbar>
+      <SideNavbar @on-logout="logout()"></SideNavbar>
     </Sidebar>
     <!-- Desktop View -->
     <section class="hidden sm:flex sm:fixed sm:top-0 sm:left-0 sm:h-full">
-      <SideNavbar></SideNavbar>
+      <SideNavbar @on-logout="logout()"></SideNavbar>
     </section>
     <main class="flex flex-col flex-1 sm:ml-[250px]">
       <nav
@@ -32,9 +32,12 @@
 <script setup lang="ts">
 import SideNavbar from "@/components/SideNavbar";
 import Sidebar from "@/components/Sidebar";
+import { useAuthStore } from "@/store/authStore";
 import { ref } from "vue";
 
 const openSidebar = ref(false);
+
+const { logout } = useAuthStore();
 </script>
 
 <style scoped></style>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getItemInLocalStorage } from "@/utils/storage";
+import { LOCAL_TOKEN } from "@/constants/auth";
 
 const { VITE_APP_API_BASE_URL } = import.meta.env as Record<string, string>;
 
@@ -15,7 +16,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Get the token from your authentication system
-    const token = getItemInLocalStorage("TOKEN");
+    const token = getItemInLocalStorage(LOCAL_TOKEN);
 
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;

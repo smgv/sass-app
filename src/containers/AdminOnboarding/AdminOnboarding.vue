@@ -39,10 +39,10 @@
           placeholder="eg. 400104"
           required
           type="number"
-          v-model="AdminFormData.pincode"
-          :error="v$.pincode?.$error"
-          :helper-text="v$.pincode?.$error ? (v$.pincode?.$errors[0]?.$message as string) : ''"
-          name="pincode"
+          v-model="AdminFormData.pinCode"
+          :error="v$.pinCode?.$error"
+          :helper-text="v$.pinCode?.$error ? (v$.pinCode?.$errors[0]?.$message as string) : ''"
+          name="pinCode"
         />
         <TextField
           label="Locality"
@@ -128,20 +128,24 @@
         />
       </div>
       <div class="hidden gap-4 w-full sm:flex">
-        <Button size="md" variant="outlined">Skip</Button>
-        <Button size="md" @click.prevent.stop="handleForm">Submit</Button>
+        <!-- <Button size="md" variant="outlined">Skip</Button> -->
+        <Button size="md" :loading="loading" @click.prevent.stop="handleForm"
+          >Submit</Button
+        >
       </div>
     </form>
     <div class="flex gap-4 w-full p-6 sm:hidden">
-      <Button size="md" variant="outlined">Skip</Button>
-      <Button size="md" @click.prevent.stop="handleForm">Submit</Button>
+      <!-- <Button size="md" variant="outlined">Skip</Button> -->
+      <Button size="md" :loading="loading" @click.prevent.stop="handleForm"
+        >Submit</Button
+      >
     </div>
     <Footer class="-mt-1" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { helpers } from "@vuelidate/validators";
 import useValidate from "@vuelidate/core";
 
@@ -152,17 +156,12 @@ import Footer from "@/components/Footer";
 
 import { AdminFormType } from "@/types/onboarding";
 import { ADMIN_FORM_INITIAL_STATE } from "@/constants/onboarding";
-import { useAuthStore } from "@/store/authStore";
+import { useAdminStore } from "@/store/adminStore";
 
 const AdminFormData = ref<AdminFormType>({ ...ADMIN_FORM_INITIAL_STATE });
+const loading = ref(false);
 
-const authStore = useAuthStore();
-
-onMounted(async () => {
-  const res = await authStore.getUser();
-  console.log(res, "USER");
-  console.log(authStore.userAuth, authStore.tokenAuth);
-});
+const adminStore = useAdminStore();
 
 const rules = {
   name: {
@@ -181,7 +180,7 @@ const rules = {
       }
     ),
   },
-  pincode: {
+  pinCode: {
     valid: helpers.withMessage(
       "Please enter valid pincode",
       (value: number) => {
@@ -264,13 +263,25 @@ const rules = {
 const v$ = useValidate(rules, AdminFormData, { $stopPropagation: true });
 
 const handleForm = async () => {
-  const isValid = await v$.value.$validate();
-  if (!isValid) return;
+  try {
+    loading.value = true;
+    const isValid = await v$.value.$validate();
+    if (!isValid) return;
 
-  console.log(AdminFormData.value);
+    console.log(AdminFormData.value);
+    const isSuccess = await adminStore.submitOnboardingDetails(
+      AdminFormData.value
+    );
 
-  AdminFormData.value = { ...ADMIN_FORM_INITIAL_STATE };
-  v$.value.$reset();
+    if (isSuccess) {
+      AdminFormData.value = { ...ADMIN_FORM_INITIAL_STATE };
+      v$.value.$reset();
+    }
+  } catch (error) {
+    console.error("Onboarding Handle Form", error);
+  } finally {
+    loading.value = false;
+  }
 };
 </script>
 

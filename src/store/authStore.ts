@@ -1,19 +1,23 @@
 import { defineStore } from "pinia";
-import { AuthApiType } from "@/types/auth";
+import { AuthApiType, UserAuthType } from "@/types/auth";
 import axiosInstance from "@/api/axiosInstance";
-import { setItemInLocalStorage } from "@/utils/storage";
+import {
+  removeItemInLocalStorage,
+  setItemInLocalStorage,
+} from "@/utils/storage";
 import { ref } from "vue";
 import { useToastStore } from "./toastStore";
 import { useRouter } from "vue-router";
 import { ROUTES } from "@/constants/routes";
 import { getTokenFromLocal, userOnboardingStatus } from "@/utils/auth";
+import { LOCAL_TOKEN } from "@/constants/auth";
 
 const AUTH_BASE_URL = "/auth";
 
 export const useAuthStore = defineStore(
   "auth",
   () => {
-    const userAuth = ref(null);
+    const userAuth = ref<UserAuthType | null>(null);
     const tokenAuth = ref(null);
 
     const toastStore = useToastStore();
@@ -25,9 +29,14 @@ export const useAuthStore = defineStore(
           `${AUTH_BASE_URL}/signup`,
           signUpData
         );
-        const { message } = response.data;
-        toastStore.setToastMessage({ type: "success", message });
-        return true;
+        const { message, status } = response.data;
+        if (status === "success") {
+          toastStore.setToastMessage({ type: "success", message });
+          return true;
+        } else {
+          toastStore.setToastMessage({ type: "failed", message });
+          return false;
+        }
       } catch (error: any) {
         toastStore.setToastMessage({
           type: "failed",
@@ -44,13 +53,22 @@ export const useAuthStore = defineStore(
           `${AUTH_BASE_URL}/signin`,
           signInData
         );
-        const { message, token, user } = response.data;
-        setItemInLocalStorage("TOKEN", token);
-        userAuth.value = user;
-        tokenAuth.value = token;
-        toastStore.setToastMessage({ type: "success", message });
-        router.push(ROUTES.ADMIN_ONBOARDING);
-        return true;
+        const { message, token, user, status } = response.data;
+        if (status === "success") {
+          setItemInLocalStorage(LOCAL_TOKEN, token);
+          userAuth.value = user;
+          tokenAuth.value = token;
+          if (user.onboardingId) {
+            router.push(ROUTES.ADMIN);
+          } else {
+            router.push(ROUTES.ADMIN_ONBOARDING);
+          }
+          toastStore.setToastMessage({ type: "success", message });
+          return true;
+        } else {
+          toastStore.setToastMessage({ type: "failed", message });
+          return false;
+        }
       } catch (error: any) {
         toastStore.setToastMessage({
           type: "failed",
@@ -90,10 +108,15 @@ export const useAuthStore = defineStore(
           `${AUTH_BASE_URL}/reset-password`,
           resetPasswordData
         );
-        const { message } = response.data;
-        toastStore.setToastMessage({ type: "success", message });
-        router.push(ROUTES.DEFAULT);
-        return true;
+        const { message, status } = response.data;
+        if (status === "success") {
+          toastStore.setToastMessage({ type: "success", message });
+          router.push(ROUTES.DEFAULT);
+          return true;
+        } else {
+          toastStore.setToastMessage({ type: "failed", message });
+          return false;
+        }
       } catch (error: any) {
         console.error("Auth ResetPassword Error:", error);
         toastStore.setToastMessage({
@@ -113,10 +136,15 @@ export const useAuthStore = defineStore(
           `${AUTH_BASE_URL}/update-password`,
           { token, password }
         );
-        const { message } = response.data;
-        toastStore.setToastMessage({ type: "success", message });
-        router.push(ROUTES.DEFAULT);
-        return true;
+        const { message, status } = response.data;
+        if (status === "success") {
+          toastStore.setToastMessage({ type: "success", message });
+          router.push(ROUTES.DEFAULT);
+          return true;
+        } else {
+          toastStore.setToastMessage({ type: "failed", message });
+          return false;
+        }
       } catch (error: any) {
         console.error("Auth UpdatePassword Error:", error);
         toastStore.setToastMessage({
@@ -135,9 +163,14 @@ export const useAuthStore = defineStore(
             email,
           }
         );
-        const { message } = response.data;
-        toastStore.setToastMessage({ type: "success", message });
-        return true;
+        const { message, status } = response.data;
+        if (status === "success") {
+          toastStore.setToastMessage({ type: "success", message });
+          return true;
+        } else {
+          toastStore.setToastMessage({ type: "failed", message });
+          return false;
+        }
       } catch (error: any) {
         console.error("Auth ForgotPassword Error:", error);
         toastStore.setToastMessage({
@@ -151,6 +184,8 @@ export const useAuthStore = defineStore(
     const getUser = async () => {
       try {
         const response = await axiosInstance.get(`${AUTH_BASE_URL}/get-user`);
+        console.log(response, "GET USER");
+        userAuth.value = response.data.user;
         return response.data.user;
       } catch (error) {
         console.error("Auth GetUser Error:", error);
@@ -159,11 +194,14 @@ export const useAuthStore = defineStore(
 
     const isAuthenticated = () => tokenAuth.value || getTokenFromLocal();
 
-    const isUserOnBoarded = () => userOnboardingStatus();
+    const isUserOnBoarded = () =>
+      userAuth.value?.onboardingId || userOnboardingStatus();
 
     const logout = () => {
+      removeItemInLocalStorage(LOCAL_TOKEN);
       userAuth.value = null;
       tokenAuth.value = null;
+      router.push(ROUTES.DEFAULT);
     };
 
     return {
@@ -183,6 +221,7 @@ export const useAuthStore = defineStore(
   },
   {
     persist: {
+      key: (id) => `sass_app_${id}`,
       storage: localStorage,
     },
   }

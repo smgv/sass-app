@@ -63,10 +63,10 @@
             label="Pincode"
             placeholder="eg. 400104"
             required
-            v-model="onboardingFormData.pincode"
-            :error="onboardingForm.pincode?.$error"
-            :helper-text="onboardingForm.pincode?.$error ? (onboardingForm.pincode?.$errors[0]?.$message as string) : ''"
-            name="pincode"
+            v-model="onboardingFormData.pinCode"
+            :error="onboardingForm.pinCode?.$error"
+            :helper-text="onboardingForm.pinCode?.$error ? (onboardingForm.pinCode?.$errors[0]?.$message as string) : ''"
+            name="pinCode"
           />
           <TextField
             label="Locality"
@@ -277,7 +277,7 @@ const onboardingFormRules = {
       return true;
     }),
   },
-  pincode: {
+  pinCode: {
     valid: helpers.withMessage(
       "Please enter valid pincode",
       (value: number) => {

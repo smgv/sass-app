@@ -21,3 +21,5 @@ export const ROLES: OptionsType[] = [
   { name: "Employee", value: "employee" },
   { name: "Member", value: "member" },
 ];
+
+export const LOCAL_TOKEN = "SASS_TOKEN";

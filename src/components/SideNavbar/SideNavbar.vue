@@ -24,10 +24,13 @@
       </li>
     </ul>
     <ul class="text-lg">
-      <li class="flex gap-2 items-center cursor-pointer hover:text-gold">
+      <button
+        class="appearance-none flex gap-2 items-center cursor-pointer hover:text-gold"
+        @click="emits('onLogout')"
+      >
         <i class="mdi mdi-logout text-2xl" />
         <p>Logout</p>
-      </li>
+      </button>
     </ul>
   </aside>
 </template>
@@ -66,6 +69,7 @@ const getRoute = (name: string) => {
 const handleNavigation = (navigate: () => void) => {
   navigate();
 };
+const emits = defineEmits(["onLogout"]);
 </script>
 
 <style scoped></style>

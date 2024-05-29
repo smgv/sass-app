@@ -16,3 +16,16 @@ export type AuthApiType = {
   password?: string;
   oldPassword?: string;
 };
+
+export type UserAuthType = {
+  email: string;
+  employee: any;
+  isGoogleLogin: boolean;
+  isVerified: boolean;
+  members: any;
+  notifications: any;
+  onboardingId: string;
+  password: string;
+  __v: number;
+  _id: string;
+};

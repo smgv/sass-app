@@ -18,7 +18,7 @@ export const ROLES = {
 export const ADMIN_FORM_INITIAL_STATE: AdminFormType = {
   name: "",
   ownerName: "",
-  pincode: 0,
+  pinCode: 0,
   locality: "",
   address: "",
   city: "",
@@ -32,7 +32,7 @@ export const ADMIN_FORM_INITIAL_STATE: AdminFormType = {
 export const MEMBER_EMPLOYEE_FORM_INITIAL_STATE: MemberEmployeeFormType = {
   fullName: "",
   role: "member",
-  pincode: 0,
+  pinCode: 0,
   locality: "",
   address: "",
   city: "",
