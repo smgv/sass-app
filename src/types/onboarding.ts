@@ -1,4 +1,5 @@
 export type AdminFormType = {
+  _id?: string;
   name: string;
   ownerName: string;
   pinCode: number;
@@ -7,7 +8,7 @@ export type AdminFormType = {
   city: string;
   state: string;
   contactNumber: number;
-  gstNumber: number;
+  gstNumber: string;
   websiteURL: string;
   logoURL: string;
 };
@@ -28,5 +29,11 @@ export type MemberEmployeeFormType = {
 
 export type MemberEmployeePasswordFormType = {
   password: string;
+  confirmPassword: string;
+};
+
+export type AdminFormPasswordType = {
+  oldPassword: string;
+  newPassword: string;
   confirmPassword: string;
 };

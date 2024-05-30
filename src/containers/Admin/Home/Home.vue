@@ -302,9 +302,9 @@ const noOfMembers = ref(0);
 
 onMounted(async () => {
   try {
-    const id = userAuth?.onboardingId || "";
-    const response = await adminStore.getAdminDetails(id);
-    adminName.value = response?.name || userAuth?.email || "";
+    console.log(adminStore.adminOnboardingDetails);
+    adminName.value =
+      adminStore.adminOnboardingDetails?.name || userAuth?.email || "";
   } catch (error) {}
 });
 </script>

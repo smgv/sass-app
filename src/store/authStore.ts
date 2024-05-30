@@ -101,17 +101,17 @@ export const useAuthStore = defineStore(
     };
 
     const resetPassword = async (
-      resetPasswordData: AuthApiType
+      oldPassword: string,
+      newPassword: string
     ): Promise<boolean> => {
       try {
         const response = await axiosInstance.patch(
           `${AUTH_BASE_URL}/reset-password`,
-          resetPasswordData
+          { oldPassword, newPassword }
         );
         const { message, status } = response.data;
         if (status === "success") {
           toastStore.setToastMessage({ type: "success", message });
-          router.push(ROUTES.DEFAULT);
           return true;
         } else {
           toastStore.setToastMessage({ type: "failed", message });
@@ -194,8 +194,10 @@ export const useAuthStore = defineStore(
 
     const isAuthenticated = () => tokenAuth.value || getTokenFromLocal();
 
-    const isUserOnBoarded = () =>
-      userAuth.value?.onboardingId || userOnboardingStatus();
+    const isUserOnBoarded = () => {
+      console.log(userAuth.value, userOnboardingStatus());
+      return userAuth.value?.onboardingId || userOnboardingStatus();
+    };
 
     const logout = () => {
       removeItemInLocalStorage(LOCAL_TOKEN);

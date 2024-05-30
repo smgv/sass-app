@@ -34,7 +34,7 @@
           placeholder="eg. 400104"
           required
           type="number"
-          v-model="AdminFormData.pincode"
+          v-model="AdminFormData.pinCode"
           :error="v$.pincode?.$error"
           :helper-text="v$.pincode?.$error ? (v$.pincode?.$errors[0]?.$message as string) : ''"
           name="pincode"
@@ -92,7 +92,6 @@
         <TextField
           label="GST Number"
           placeholder="eg. 22AAAAA0000A1Z5"
-          type="number"
           :required="false"
           v-model="AdminFormData.gstNumber"
           :error="v$.gstNumber?.$error"
@@ -123,7 +122,9 @@
         />
       </div>
       <div class="gap-4 flex w-max ml-auto">
-        <Button size="md" @click.prevent.stop="handleForm">Save</Button>
+        <Button size="md" :loading="loading" @click.prevent.stop="handleForm"
+          >Update</Button
+        >
       </div>
     </form>
 
@@ -141,26 +142,37 @@
           placeholder="********"
           type="password"
           required
-          name="name"
+          name="oldPassword"
+          v-model="AdminPasswordData.oldPassword"
+          :error="vpwd$.oldPassword?.$error"
+          :helper-text="vpwd$.oldPassword?.$error ? (vpwd$.oldPassword?.$errors[0]?.$message as string) : ''"
         />
         <TextField
           label="New Password"
           placeholder="********"
           type="password"
           required
-          name="ownerName"
+          name="newPassword"
+          v-model="AdminPasswordData.newPassword"
+          :error="vpwd$.newPassword?.$error"
+          :helper-text="vpwd$.newPassword?.$error ? (vpwd$.newPassword?.$errors[0]?.$message as string) : ''"
         />
         <TextField
           label="Confirm Password"
           placeholder="********"
           type="password"
           required
-          v-model="AdminFormData.ownerName"
-          name="ownerName"
+          name="confirmPassword"
+          v-model="AdminPasswordData.confirmPassword"
+          :error="vpwd$.confirmPassword?.$error"
+          :helper-text="vpwd$.confirmPassword?.$error ? (vpwd$.confirmPassword?.$errors[0]?.$message as string) : ''"
         />
       </div>
       <div class="gap-4 flex w-max ml-auto">
-        <Button size="md" @click.prevent.stop="handleForm"
+        <Button
+          size="md"
+          :loading="pwdLoading"
+          @click.prevent.stop="handleUpdatePassword"
           >Update Password</Button
         >
       </div>
@@ -169,7 +181,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { helpers } from "@vuelidate/validators";
 import useValidate from "@vuelidate/core";
 
@@ -177,10 +189,30 @@ import TextField from "@/components/TextField";
 import TextArea from "@/components/TextArea";
 import Button from "@/components/Button";
 
-import { AdminFormType } from "@/types/onboarding";
-import { ADMIN_FORM_INITIAL_STATE } from "@/constants/onboarding";
+import { AdminFormPasswordType, AdminFormType } from "@/types/onboarding";
+import {
+  ADMIN_FORM_INITIAL_STATE,
+  ADMIN_FORM_PASSWORD_INITIAL_STATE,
+} from "@/constants/onboarding";
+import { useAdminStore } from "@/store/adminStore";
+import { isConfirmPasswordValid, isPasswordValid } from "@/utils/auth";
+import { useAuthStore } from "@/store/authStore";
 
-const AdminFormData = ref<AdminFormType>({ ...ADMIN_FORM_INITIAL_STATE });
+const AdminFormData = ref<AdminFormType>({
+  ...ADMIN_FORM_INITIAL_STATE,
+});
+const AdminPasswordData = ref<AdminFormPasswordType>({
+  ...ADMIN_FORM_PASSWORD_INITIAL_STATE,
+});
+const adminStore = useAdminStore();
+const authStore = useAuthStore();
+const loading = ref(false);
+const pwdLoading = ref(false);
+
+onMounted(() => {
+  console.log(adminStore);
+  AdminFormData.value = adminStore?.adminOnboardingDetails as AdminFormType;
+});
 
 const rules = {
   name: {
@@ -199,7 +231,7 @@ const rules = {
       }
     ),
   },
-  pincode: {
+  pinCode: {
     valid: helpers.withMessage(
       "Please enter valid pincode",
       (value: number) => {
@@ -245,7 +277,7 @@ const rules = {
     valid: helpers.withMessage(
       "Please enter valid GST number",
       (value: number) => {
-        if (Boolean(value)) {
+        if (value) {
           return value.toString().length === 10;
         } else {
           return true;
@@ -281,14 +313,69 @@ const rules = {
 
 const v$ = useValidate(rules, AdminFormData, { $stopPropagation: true });
 
+const passwordRules = {
+  oldPassword: {
+    valid: helpers.withMessage(
+      "Please enter valid password",
+      (value: string) => {
+        return value !== "";
+      }
+    ),
+  },
+  newPassword: {
+    valid: helpers.withMessage(
+      "Please enter valid password",
+      (value: string) => {
+        if (value) return value !== "";
+        return isPasswordValid(value);
+      }
+    ),
+  },
+  confirmPassword: {
+    valid: helpers.withMessage("Password mismatch", (value: string) => {
+      return isConfirmPasswordValid(value, AdminPasswordData.value.newPassword);
+    }),
+  },
+};
+
+const vpwd$ = useValidate(passwordRules, AdminPasswordData, {
+  $stopPropagation: true,
+});
+
 const handleForm = async () => {
-  const isValid = await v$.value.$validate();
-  if (!isValid) return;
+  try {
+    loading.value = true;
+    const isValid = await v$.value.$validate();
+    if (!isValid) return;
 
-  console.log(AdminFormData.value);
+    await adminStore.updateOnboardingDetails(AdminFormData.value);
+  } catch (error) {
+    console.error("Onboarding Handle Form", error);
+  } finally {
+    loading.value = false;
+  }
+};
 
-  AdminFormData.value = { ...ADMIN_FORM_INITIAL_STATE };
-  v$.value.$reset();
+const handleUpdatePassword = async () => {
+  try {
+    pwdLoading.value = true;
+    const isValid = await vpwd$.value.$validate();
+    if (!isValid) return;
+
+    const isSuccess = await authStore.resetPassword(
+      AdminPasswordData.value.oldPassword,
+      AdminPasswordData.value.newPassword
+    );
+
+    if (isSuccess) {
+      AdminPasswordData.value = { ...ADMIN_FORM_PASSWORD_INITIAL_STATE };
+      vpwd$.value.$reset();
+    }
+  } catch (error) {
+    console.error("Onboarding Handle Form", error);
+  } finally {
+    pwdLoading.value = false;
+  }
 };
 </script>
 

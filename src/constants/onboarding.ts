@@ -1,4 +1,5 @@
 import {
+  AdminFormPasswordType,
   AdminFormType,
   MemberEmployeeFormType,
   MemberEmployeePasswordFormType,
@@ -24,9 +25,15 @@ export const ADMIN_FORM_INITIAL_STATE: AdminFormType = {
   city: "",
   state: "",
   contactNumber: 0,
-  gstNumber: 0,
+  gstNumber: "",
   websiteURL: "",
   logoURL: "",
+};
+
+export const ADMIN_FORM_PASSWORD_INITIAL_STATE: AdminFormPasswordType = {
+  oldPassword: "",
+  newPassword: "",
+  confirmPassword: "",
 };
 
 export const MEMBER_EMPLOYEE_FORM_INITIAL_STATE: MemberEmployeeFormType = {

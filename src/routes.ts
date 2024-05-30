@@ -48,7 +48,7 @@ const router = createRouter({
       children: [
         {
           path: "",
-          redirect: "admin/home",
+          redirect: "/admin/home",
         },
         {
           path: "home",

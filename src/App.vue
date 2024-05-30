@@ -5,16 +5,21 @@ import Loader from "@/components/Loader";
 import { useAuthStore } from "./store/authStore";
 import { useRouter } from "vue-router";
 import { ROUTES } from "./constants/routes";
+import { useAdminStore } from "./store/adminStore";
 
 const loading = ref(false);
 
 const authStore = useAuthStore();
+const adminStore = useAdminStore();
 const router = useRouter();
 
 onMounted(async () => {
   try {
+    await authStore.getUser();
     loading.value = true;
+    console.log(authStore.isAuthenticated(), authStore.isUserOnBoarded());
     if (authStore.isAuthenticated() && authStore.isUserOnBoarded()) {
+      await adminStore.getAdminDetails(authStore?.userAuth?.onboardingId || "");
       router.push(ROUTES.ADMIN);
       return;
     }

@@ -5,12 +5,14 @@ import { ref } from "vue";
 import { useToastStore } from "./toastStore";
 import { useRouter } from "vue-router";
 import { ROUTES } from "@/constants/routes";
+import { useAuthStore } from "./authStore";
 
 const ADMIN_BASE_URL = "/admin";
 
 export const useAdminStore = defineStore("adminStore", () => {
-  const adminOnboardingDetails = ref(null);
+  const adminOnboardingDetails = ref<AdminFormType | null>(null);
   const toastStore = useToastStore();
+  const authStore = useAuthStore();
   const router = useRouter();
 
   const submitOnboardingDetails = async (onboardingDetails: AdminFormType) => {
@@ -38,17 +40,46 @@ export const useAdminStore = defineStore("adminStore", () => {
     }
   };
 
-  const getAdminDetails = async (id: string): Promise<AdminFormType | null> => {
+  const getAdminDetails = async (id: string): Promise<boolean> => {
     try {
       const response = await axiosInstance.get(
         `${ADMIN_BASE_URL}/admin-details/${id}`
       );
       const { status, message, onboardingData } = response.data;
       if (status === "success") {
-        return onboardingData;
+        adminOnboardingDetails.value = onboardingData;
+        return true;
       } else {
         toastStore.setToastMessage({ type: "failed", message });
-        return null;
+        return false;
+      }
+    } catch (error: any) {
+      authStore.logout();
+      toastStore.setToastMessage({
+        type: "failed",
+        message: error.response.data.message as string,
+      });
+      console.error("Admin Get Onboarding Error:", error);
+      return false;
+    }
+  };
+
+  const updateOnboardingDetails = async (onboardingDetails: AdminFormType) => {
+    try {
+      const response = await axiosInstance.patch(
+        `${ADMIN_BASE_URL}/update-admin-details`,
+        onboardingDetails
+      );
+
+      const { status, message, updatedOnboardingData } = response.data;
+
+      if (status === "success") {
+        adminOnboardingDetails.value = updatedOnboardingData;
+        toastStore.setToastMessage({ type: "success", message });
+        return true;
+      } else {
+        toastStore.setToastMessage({ type: "failed", message });
+        return false;
       }
     } catch (error: any) {
       toastStore.setToastMessage({
@@ -56,9 +87,14 @@ export const useAdminStore = defineStore("adminStore", () => {
         message: error.response.data.message as string,
       });
       console.error("Admin Get Onboarding Error:", error);
-      return null;
+      return false;
     }
   };
 
-  return { adminOnboardingDetails, submitOnboardingDetails, getAdminDetails };
+  return {
+    adminOnboardingDetails,
+    submitOnboardingDetails,
+    getAdminDetails,
+    updateOnboardingDetails,
+  };
 });
