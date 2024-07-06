@@ -15,7 +15,10 @@ const router = useRouter();
 
 onMounted(async () => {
   try {
-    await authStore.getUser();
+    const res = await authStore.getUser();
+    if (!res) {
+      return;
+    }
     loading.value = true;
     console.log(authStore.isAuthenticated(), authStore.isUserOnBoarded());
     if (authStore.isAuthenticated() && authStore.isUserOnBoarded()) {

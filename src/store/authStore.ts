@@ -186,9 +186,10 @@ export const useAuthStore = defineStore(
         const response = await axiosInstance.get(`${AUTH_BASE_URL}/get-user`);
         console.log(response, "GET USER");
         userAuth.value = response.data.user;
-        return response.data.user;
+        return response?.data?.user;
       } catch (error) {
         console.error("Auth GetUser Error:", error);
+        return null;
       }
     };
 

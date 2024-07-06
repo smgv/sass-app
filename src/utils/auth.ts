@@ -27,5 +27,5 @@ export const getTokenFromLocal = () => {
 
 export const userOnboardingStatus = () => {
   const data = getItemInLocalStorage("__persisted__sass_app_auth");
-  return data?.userAuth?.onboardingId;
+  return data?.userAuth?.onboardingId || null;
 };
