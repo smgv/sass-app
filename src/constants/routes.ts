@@ -15,7 +15,7 @@ export const ROUTES = {
   VERIFY: "/verify/:token",
   RESET_PASSWORD: "/reset-password/:token",
   ADMIN_ONBOARDING: "/admin-onboarding",
-  MEMBER_ONBOARDING: "/member-onboarding",
-  EMPLOYEE_ONBOARDING: "/employee-onboarding",
+  MEMBER_ONBOARDING: "/member-onboarding/:token",
+  EMPLOYEE_ONBOARDING: "/employee-onboarding/:token",
   ADMIN: "/admin",
 };

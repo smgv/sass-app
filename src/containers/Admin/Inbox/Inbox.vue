@@ -160,7 +160,7 @@ const v$ = useValidate(rules, InboxFormData, { $stopPropagation: true });
 onBeforeMount(async () => {
   const res = await inboxStore.getInboxList();
   if (res) {
-    inboxList.value = inboxStore.inboxList;
+    inboxList.value = res;
   }
 });
 

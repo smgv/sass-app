@@ -33,13 +33,13 @@ const router = createRouter({
       path: ROUTES.EMPLOYEE_ONBOARDING,
       name: ROUTES_NAME.EMPLOYEE_ONBOARDING,
       component: () => import("@/views/EmployeeMemberOnboarding.vue"),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: false },
     },
     {
       path: ROUTES.MEMBER_ONBOARDING,
       name: ROUTES_NAME.MEMBER_ONBOARDING,
       component: () => import("@/views/EmployeeMemberOnboarding.vue"),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: false },
     },
     {
       path: ROUTES.ADMIN,
