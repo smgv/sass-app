@@ -8,6 +8,7 @@ export const ROUTES_NAME = {
   MEMBER_ONBOARDING: "member-onboarding",
   EMPLOYEE_ONBOARDING: "employee-onboarding",
   ADMIN: "admin",
+  ONBOARDING_STATUS: "onboarding-status",
 };
 
 export const ROUTES = {
@@ -18,4 +19,5 @@ export const ROUTES = {
   MEMBER_ONBOARDING: "/member-onboarding/:token",
   EMPLOYEE_ONBOARDING: "/employee-onboarding/:token",
   ADMIN: "/admin",
+  ONBOARDING_STATUS: "/onboarding-status",
 };

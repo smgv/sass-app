@@ -1,5 +1,16 @@
 <template>
-  <div class="w-full h-screen flex flex-col justify-center items-center">
+  <div
+    v-if="loading"
+    class="h-screen flex flex-col justify-center items-center w-full"
+  >
+    <Loader loading size="lg" />
+    <p
+      class="w-[80%] sm:w-[60%] mx-auto text-center mt-6 text-lg text-gray-600"
+    >
+      Please wait verifying the user...
+    </p>
+  </div>
+  <div v-else class="w-full h-screen flex flex-col justify-center items-center">
     <p
       class="block sm:hidden text-xl text-gray-500 font-semibold text-center mt-6"
     >
@@ -28,6 +39,7 @@
           :error="emailForm.emailData?.$error"
           :helper-text="emailForm.emailData?.$error ? (emailForm.emailData?.$errors[0]?.$message as string) : ''"
           name="email"
+          :disabled="true"
         />
         <Button
           class="sm:!w-auto"
@@ -184,7 +196,10 @@
             name="confirmPassword"
           />
         </div>
-        <Button size="md" @click.prevent.stop="handlePasswordForm"
+        <Button
+          size="md"
+          @click.prevent.stop="handlePasswordForm"
+          :loading="formLoading"
           >Submit</Button
         >
       </form>
@@ -207,7 +222,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import useValidate from "@vuelidate/core";
 import { email, helpers } from "@vuelidate/validators";
@@ -231,11 +246,38 @@ import {
 import { isConfirmPasswordValid, isPasswordValid } from "@/utils/auth";
 import { PASSWORD_HELPER_TEXT } from "@/constants/auth";
 
+import Loader from "@/components/Loader";
+import { useMemberStore } from "@/store/memberStore";
+import { useEmployeeStore } from "@/store/employeeStore";
+
+const memberStore = useMemberStore();
+const employeeStore = useEmployeeStore();
+
+const loading = ref(false);
 const route = useRoute();
-
 const currentOnboardingState = ref(MEMBER_EMPLOYEE_FORM.EMAIL);
-
 const emailData = ref("");
+const adminEmail = ref("");
+const formLoading = ref(false);
+
+const isEmployee = computed(
+  () => route.name === ROUTES_NAME.EMPLOYEE_ONBOARDING
+);
+
+onMounted(async () => {
+  loading.value = true;
+  const { params } = route;
+  const resp = await memberStore.getMember(params.token as string);
+  emailData.value = resp.email;
+  adminEmail.value = resp.customData.adminEmail;
+  loading.value = false;
+  if (resp.email) {
+    (await isEmployee)
+      ? employeeStore.getEmployeeOnboardingStatus(resp.email)
+      : memberStore.getMemberOnboardingStatus(resp.email);
+  }
+});
+
 const onboardingFormData = ref<MemberEmployeeFormType>({
   ...MEMBER_EMPLOYEE_FORM_INITIAL_STATE,
 });
@@ -383,49 +425,51 @@ const formName = computed(() => {
   return route.name === ROUTES_NAME.EMPLOYEE_ONBOARDING ? "Employee" : "Member";
 });
 
-const isEmployee = computed(
-  () => route.name === ROUTES_NAME.EMPLOYEE_ONBOARDING
-);
-
 const handleEmailForm = async () => {
   const isValid = await emailForm.value.$validate();
   if (!isValid) return;
-
   console.log(emailData.value);
-  emailForm.value.$reset();
   currentOnboardingState.value = MEMBER_EMPLOYEE_FORM.ONBOARDING;
-  emailData.value = "";
 };
 
 const handleOnboardingForm = async () => {
   const isValid = await onboardingForm.value.$validate();
   if (!isValid) return;
-
   console.log(onboardingFormData.value);
-
-  onboardingForm.value.$reset();
   currentOnboardingState.value = MEMBER_EMPLOYEE_FORM.PASSWORD;
-  onboardingFormData.value = { ...MEMBER_EMPLOYEE_FORM_INITIAL_STATE };
 };
 
 const handlePasswordForm = async () => {
-  const isValid = await passwordForm.value.$validate();
-  if (!isValid) return;
-
-  console.log(passwordData.value);
-  passwordForm.value.$reset();
-  currentOnboardingState.value = MEMBER_EMPLOYEE_FORM.EMAIL;
-  passwordData.value = { ...MEMBER_EMPLOYEE_PASSWORD_FORM_INITIAL_STATE };
+  try {
+    formLoading.value = true;
+    const isValid = await passwordForm.value.$validate();
+    if (!isValid) return;
+    console.log(passwordData.value, emailData.value, onboardingFormData.value);
+    if (isEmployee.value) {
+      await employeeStore.postEmployee(
+        {
+          email: emailData.value,
+          ...onboardingFormData.value,
+          password: passwordData.value.password,
+        },
+        adminEmail.value
+      );
+    } else {
+      await memberStore.postMember(
+        {
+          email: emailData.value,
+          ...onboardingFormData.value,
+          password: passwordData.value.password,
+        },
+        adminEmail.value
+      );
+    }
+  } catch (error) {
+    console.error("Post Onboarding Employee Member", error);
+  } finally {
+    formLoading.value = false;
+  }
 };
 </script>
 
 <style scoped></style>
-
-<!-- TODO: 
-1. will take the searchParams which we will get in form of base64params that contains:
-admin objectId
-users email
-
-2. if route doesn't have the objectId and mail it will not show the form will show it as the Invalid Link
-on mount will check those parameters
--->

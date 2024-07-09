@@ -13,6 +13,7 @@
         "
         v-bind="$attrs"
         :class="[defaultInputClass]"
+        :disabled="disabled"
         @focus="isInputFocus = true"
         @blur="isInputFocus = false"
       />
@@ -85,9 +86,9 @@ const showPassword = ref(false);
 
 const inputContainerClass =
   "w-full flex gap-2 items-center border-2 border-gray-300 rounded-md bg-white";
-const inputContainerDisabledClass = "border-gray-400";
+const inputContainerDisabledClass = "!border-gray-400 !bg-gray-100";
 const defaultInputClass =
-  "placeholder-gray-400 border-0 focus:outline-none focus:ring-0 text-gray-500 w-full rounded-md";
+  "placeholder-gray-400 border-0 focus:outline-none focus:ring-0 text-gray-500 w-full rounded-md disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed";
 const defaultHelperClass = "text-xs text-gray-500";
 
 const inputContainerClassList = computed(() => {

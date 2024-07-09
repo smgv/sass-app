@@ -15,7 +15,7 @@ export type AdminFormType = {
 
 export type MemberEmployeeFormType = {
   fullName: string;
-  role: "member" | "employee";
+  role: "Member" | "Employee";
   pinCode: number;
   locality: string;
   address: string;
@@ -37,3 +37,8 @@ export type AdminFormPasswordType = {
   newPassword: string;
   confirmPassword: string;
 };
+
+export interface MemberEmployeeFormDataType extends MemberEmployeeFormType {
+  email: string;
+  password: string;
+}

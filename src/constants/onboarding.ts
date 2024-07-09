@@ -38,7 +38,7 @@ export const ADMIN_FORM_PASSWORD_INITIAL_STATE: AdminFormPasswordType = {
 
 export const MEMBER_EMPLOYEE_FORM_INITIAL_STATE: MemberEmployeeFormType = {
   fullName: "",
-  role: "member",
+  role: "Member",
   pinCode: 0,
   locality: "",
   address: "",

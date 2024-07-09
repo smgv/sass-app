@@ -16,13 +16,17 @@ const route = useRoute();
 
 onMounted(async () => {
   try {
+    if (!route.meta.requiresAuth) {
+      return;
+    }
+
+    console.log("fetching user data");
     const res = await authStore.getUser();
     if (!res) {
       return;
     }
+
     loading.value = true;
-    console.log(authStore.isAuthenticated(), authStore.isUserOnBoarded());
-    console.log(route.path);
     if (authStore.isAuthenticated() && authStore.isUserOnBoarded()) {
       await adminStore.getAdminDetails(authStore?.userAuth?.onboardingId || "");
       router.push(ROUTES.ADMIN);

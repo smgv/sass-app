@@ -42,6 +42,12 @@ const router = createRouter({
       meta: { requiresAuth: false },
     },
     {
+      path: ROUTES.ONBOARDING_STATUS,
+      name: ROUTES_NAME.ONBOARDING_STATUS,
+      component: () => import("@/views/OnboardingStatus.vue"),
+      meta: { requiresAuth: false },
+    },
+    {
       path: ROUTES.ADMIN,
       name: ROUTES_NAME.ADMIN,
       component: () => import("@/views/Admin.vue"),
