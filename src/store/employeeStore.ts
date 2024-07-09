@@ -81,9 +81,28 @@ export const useEmployeeStore = defineStore("employee", () => {
     }
   };
 
+  const getAdminEmployees = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${EMPLOYEE_BASE_URL}/admin-employee`
+      );
+      const { status, employeeList } = response.data;
+
+      if (status === "success") {
+        return employeeList;
+      } else {
+        return null;
+      }
+    } catch (error: any) {
+      console.error("Admin Member Error:", error);
+      return null;
+    }
+  };
+
   return {
     getEmployee,
     getEmployeeOnboardingStatus,
     postEmployee,
+    getAdminEmployees,
   };
 });

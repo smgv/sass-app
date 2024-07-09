@@ -40,7 +40,7 @@ export const useAdminStore = defineStore("adminStore", () => {
     }
   };
 
-  const getAdminDetails = async (id: string): Promise<boolean> => {
+  const getAdminDetails = async (id: string): Promise<any> => {
     try {
       const response = await axiosInstance.get(
         `${ADMIN_BASE_URL}/admin-details/${id}`
@@ -48,10 +48,10 @@ export const useAdminStore = defineStore("adminStore", () => {
       const { status, message, onboardingData } = response.data;
       if (status === "success") {
         adminOnboardingDetails.value = onboardingData;
-        return true;
+        return onboardingData;
       } else {
         toastStore.setToastMessage({ type: "failed", message });
-        return false;
+        return null;
       }
     } catch (error: any) {
       authStore.logout();
@@ -60,7 +60,7 @@ export const useAdminStore = defineStore("adminStore", () => {
         message: error.response.data.message as string,
       });
       console.error("Admin Get Onboarding Error:", error);
-      return false;
+      return null;
     }
   };
 
@@ -91,10 +91,35 @@ export const useAdminStore = defineStore("adminStore", () => {
     }
   };
 
+  const getAdminAccountInfo = async (): Promise<any> => {
+    try {
+      console.log("getUser");
+      const response = await axiosInstance.get(
+        `${ADMIN_BASE_URL}/onboarding-details`
+      );
+      const { status, message, adminData } = response.data;
+      if (status === "success") {
+        return adminData[0];
+      } else {
+        toastStore.setToastMessage({ type: "failed", message });
+        return null;
+      }
+    } catch (error: any) {
+      authStore.logout();
+      toastStore.setToastMessage({
+        type: "failed",
+        message: error.response.data.message as string,
+      });
+      console.error("Admin Get Onboarding Error:", error);
+      return null;
+    }
+  };
+
   return {
     adminOnboardingDetails,
     submitOnboardingDetails,
     getAdminDetails,
     updateOnboardingDetails,
+    getAdminAccountInfo,
   };
 });

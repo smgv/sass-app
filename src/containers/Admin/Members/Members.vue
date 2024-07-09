@@ -7,6 +7,7 @@
   <!-- Form -->
   <form class="flex flex-col sm:flex-row gap-4 my-6">
     <TextField
+      v-model="searchValue"
       label="Search"
       placeholder="Search by name"
       class="w-full"
@@ -26,52 +27,36 @@
           <th scope="col" class="p-4 text-gray-500">Contact No.</th>
           <th scope="col" class="p-4 text-gray-500">Emergency Contact No.</th>
           <th scope="col" class="p-4 text-gray-500">Class Type</th>
-          <th scope="col" class="p-4 text-gray-500">Assigned Coach</th>
-          <th scope="col" class="p-4 text-gray-500">No. of sessions</th>
-          <th scope="col" class="p-4 text-gray-500">Completed sessions</th>
-          <th scope="col" class="p-4 text-gray-500">Onboarding Status</th>
-          <th scope="col" class="p-4 text-gray-500">View Details</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="bg-white border-b">
+        <tr
+          v-for="(member, idx) in filteredMembers"
+          :key="idx"
+          class="bg-white border-b"
+        >
           <td class="p-3">
-            <p class="text-sm font-medium text-gray-500">example@domain.com</p>
+            <p class="text-sm font-medium text-gray-500">{{ member.email }}</p>
           </td>
           <td class="p-3">
-            <p class="text-sm font-medium text-gray-500">Member</p>
+            <p class="text-sm font-medium text-gray-500">
+              {{ member.fullName }}
+            </p>
           </td>
           <td class="p-3">
-            <p class="text-sm font-medium text-gray-500">+91-912345678</p>
+            <p class="text-sm font-medium text-gray-500">
+              {{ member.contactNumber }}
+            </p>
           </td>
           <td class="p-3">
-            <p class="text-sm font-medium text-gray-500">+91-912345678</p>
+            <p class="text-sm font-medium text-gray-500">
+              {{ member.emergencyContactNumber }}
+            </p>
           </td>
           <td class="p-3">
-            <p class="text-sm font-medium text-gray-500">Personal Training</p>
-          </td>
-          <td class="p-3">
-            <p class="text-sm font-medium text-gray-500">Coach 1</p>
-          </td>
-          <td class="p-3">
-            <p class="text-sm font-medium text-gray-500">24</p>
-          </td>
-          <td class="p-3">
-            <p class="text-sm font-medium text-gray-500">4</p>
-          </td>
-          <td class="p-3">
-            <div
-              class="text-sm font-semibold bg-green-100 text-green-800 w-fit px-3 py-1 rounded-xl capitalize"
-            >
-              Completed
-            </div>
-          </td>
-          <td class="p-3">
-            <button
-              class="text-sm appearance-none font-semibold bg-gray-100 text-gray-800 w-fit px-3 py-1 rounded-xl capitalize"
-            >
-              <i class="mdi mdi-eye" />
-            </button>
+            <p class="text-sm font-medium text-gray-500">
+              {{ member.classType }}
+            </p>
           </td>
         </tr>
       </tbody>
@@ -81,6 +66,24 @@
 
 <script setup lang="ts">
 import TextField from "@/components/TextField";
+import { computed, onBeforeMount, ref } from "vue";
+import { useMemberStore } from "@/store/memberStore";
+import { AdminMemberEmployeeFormDataType } from "@/types/onboarding";
+
+const membersData = ref<AdminMemberEmployeeFormDataType[]>([]);
+const memberStore = useMemberStore();
+const searchValue = ref("");
+
+onBeforeMount(async () => {
+  const resp = await memberStore.getAdminMember();
+  membersData.value = resp;
+});
+
+const filteredMembers = computed(() => {
+  return membersData.value.filter((member) =>
+    member.fullName.toLowerCase().includes(searchValue.value.toLowerCase())
+  );
+});
 </script>
 
 <style scoped>

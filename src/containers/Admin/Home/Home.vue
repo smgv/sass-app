@@ -38,9 +38,9 @@
       <h4 class="text-xl font-bold text-black">Time Table</h4>
       <div class="flex items-center gap-2">
         <Button class="!w-fit">Edit <i class="mdi mdi-pencil" /></Button>
-        <Button variant="outlined" class="!w-fit"
+        <!-- <Button variant="outlined" class="!w-fit"
           >Print <i class="mdi mdi-printer"
-        /></Button>
+        /></Button> -->
       </div>
     </div>
 
@@ -290,11 +290,15 @@
 import Button from "@/components/Button";
 import { useAdminStore } from "@/store/adminStore";
 import { useAuthStore } from "@/store/authStore";
+import { useEmployeeStore } from "@/store/employeeStore";
+import { useMemberStore } from "@/store/memberStore";
 import { onMounted, ref } from "vue";
 
 const authStore = useAuthStore();
 const { userAuth } = authStore;
 const adminStore = useAdminStore();
+const memberStore = useMemberStore();
+const employeeStore = useEmployeeStore();
 
 const adminName = ref("");
 const noOfEmployees = ref(0);
@@ -305,6 +309,10 @@ onMounted(async () => {
     console.log(adminStore.adminOnboardingDetails);
     adminName.value =
       adminStore.adminOnboardingDetails?.name || userAuth?.email || "";
+    const memberData = await memberStore.getAdminMember();
+    noOfMembers.value = memberData.length;
+    const employeeData = await employeeStore.getAdminEmployees();
+    noOfEmployees.value = employeeData.length;
   } catch (error) {}
 });
 </script>

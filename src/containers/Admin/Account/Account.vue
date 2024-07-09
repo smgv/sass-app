@@ -209,9 +209,11 @@ const authStore = useAuthStore();
 const loading = ref(false);
 const pwdLoading = ref(false);
 
-onMounted(() => {
+onMounted(async () => {
   console.log(adminStore);
-  AdminFormData.value = adminStore?.adminOnboardingDetails as AdminFormType;
+  const resp = await adminStore?.getAdminAccountInfo();
+  console.log(resp);
+  AdminFormData.value = { ...resp };
 });
 
 const rules = {

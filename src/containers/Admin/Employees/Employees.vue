@@ -7,6 +7,7 @@
   <!-- Form -->
   <form class="flex flex-col sm:flex-row gap-4 my-6">
     <TextField
+      v-model="searchValue"
       label="Search"
       placeholder="Search by name"
       class="w-full"
@@ -25,37 +26,33 @@
           <th scope="col" class="p-4 text-gray-500">Name</th>
           <th scope="col" class="p-4 text-gray-500">Contact No.</th>
           <th scope="col" class="p-4 text-gray-500">Emergency Contact No.</th>
-          <th scope="col" class="p-4 text-gray-500">Onboarding Status</th>
-          <th scope="col" class="p-4 text-gray-500">View Details</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="bg-white border-b">
+        <tr
+          v-for="(employee, idx) in filteredEmployee"
+          :key="idx"
+          class="bg-white border-b"
+        >
           <td class="p-3">
-            <p class="text-sm font-medium text-gray-500">example@domain.com</p>
+            <p class="text-sm font-medium text-gray-500">
+              {{ employee.email }}
+            </p>
           </td>
           <td class="p-3">
-            <p class="text-sm font-medium text-gray-500">Employee</p>
+            <p class="text-sm font-medium text-gray-500">
+              {{ employee.fullName }}
+            </p>
           </td>
           <td class="p-3">
-            <p class="text-sm font-medium text-gray-500">+91-912345678</p>
+            <p class="text-sm font-medium text-gray-500">
+              {{ employee.contactNumber }}
+            </p>
           </td>
           <td class="p-3">
-            <p class="text-sm font-medium text-gray-500">+91-912345678</p>
-          </td>
-          <td class="p-3">
-            <div
-              class="text-sm font-semibold bg-green-100 text-green-800 w-fit px-3 py-1 rounded-xl capitalize"
-            >
-              Completed
-            </div>
-          </td>
-          <td class="p-3">
-            <button
-              class="text-sm appearance-none font-semibold bg-gray-100 text-gray-800 w-fit px-3 py-1 rounded-xl capitalize"
-            >
-              <i class="mdi mdi-eye" />
-            </button>
+            <p class="text-sm font-medium text-gray-500">
+              {{ employee.emergencyContactNumber }}
+            </p>
           </td>
         </tr>
       </tbody>
@@ -65,6 +62,24 @@
 
 <script setup lang="ts">
 import TextField from "@/components/TextField";
+import { computed, onBeforeMount, ref } from "vue";
+import { useEmployeeStore } from "@/store/employeeStore";
+import { AdminMemberEmployeeFormDataType } from "@/types/onboarding";
+
+const employeeData = ref<AdminMemberEmployeeFormDataType[]>([]);
+const employeeStore = useEmployeeStore();
+const searchValue = ref("");
+
+onBeforeMount(async () => {
+  const resp = await employeeStore.getAdminEmployees();
+  employeeData.value = resp;
+});
+
+const filteredEmployee = computed(() => {
+  return employeeData.value.filter((employee) =>
+    employee.fullName.toLowerCase().includes(searchValue.value.toLowerCase())
+  );
+});
 </script>
 
 <style scoped>

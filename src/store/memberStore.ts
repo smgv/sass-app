@@ -81,9 +81,28 @@ export const useMemberStore = defineStore("member", () => {
     }
   };
 
+  const getAdminMember = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${MEMBER_BASE_URL}/admin-members`
+      );
+      const { status, membersList } = response.data;
+
+      if (status === "success") {
+        return membersList;
+      } else {
+        return null;
+      }
+    } catch (error: any) {
+      console.error("Admin Member Error:", error);
+      return null;
+    }
+  };
+
   return {
     getMember,
     postMember,
     getMemberOnboardingStatus,
+    getAdminMember,
   };
 });

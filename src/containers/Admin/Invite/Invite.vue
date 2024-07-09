@@ -52,7 +52,7 @@
             <th scope="col" class="p-4 text-gray-500">Email</th>
             <th scope="col" class="p-4 text-gray-500">Type</th>
             <th scope="col" class="p-4 text-gray-500">Class Type</th>
-            <!-- <th scope="col" class="p-4 text-gray-500">Assigned Coach</th> -->
+            <th scope="col" class="p-4 text-gray-500">Contact Number</th>
             <th scope="col" class="p-4 text-gray-500">Onboarding Status</th>
           </tr>
         </thead>
@@ -76,9 +76,11 @@
                 {{ invite.type === "Member" ? invite.classType : "-" }}
               </p>
             </td>
-            <!-- <td class="p-3">
-              <p class="text-sm font-medium text-gray-500">Coach 1</p>
-            </td> -->
+            <td class="p-3">
+              <p class="text-sm font-medium text-gray-500">
+                {{ invite.contactNumber }}
+              </p>
+            </td>
             <td class="p-3">
               <div
                 :class="[
@@ -115,6 +117,19 @@
               :error="v$.email?.$error"
               :helper-text="v$.email?.$error ? (v$.email?.$errors[0]?.$message as string) : ''"
             />
+            <TextField
+              label="Contact Number"
+              placeholder="Enter Contact Number"
+              type="number"
+              class="w-full"
+              v-model="InviteFormData.contactNumber"
+              :error="v$.contactNumber?.$error"
+              :helper-text="v$.contactNumber?.$error ? (v$.contactNumber?.$errors[0]?.$message as string) : ''"
+            />
+          </div>
+          <div
+            class="flex flex-col sm:flex-row items-center justify-between gap-4"
+          >
             <Select
               label="Type"
               placeholder="Select Type"
@@ -187,6 +202,7 @@ const classTypeSearch = ref("all");
 
 onBeforeMount(async () => {
   const res = await inviteStore.getInviteList();
+  console.log(res);
   if (res) {
     inviteList.value = res;
   }
@@ -217,6 +233,14 @@ const rules = {
       }
       return value !== "";
     }),
+  },
+  contactNumber: {
+    valid: helpers.withMessage(
+      "Please enter valid contact number",
+      (value: number) => {
+        return Boolean(value) && value.toString().length === 10;
+      }
+    ),
   },
 };
 

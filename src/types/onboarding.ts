@@ -41,4 +41,24 @@ export type AdminFormPasswordType = {
 export interface MemberEmployeeFormDataType extends MemberEmployeeFormType {
   email: string;
   password: string;
+  classType?: string;
+}
+
+export interface AdminMemberEmployeeFormDataType {
+  _id: string;
+  fullName: string;
+  role: "Employee" | "Member";
+  email: string;
+  password: string;
+  contactNumber: number;
+  emergencyContactNumber: number;
+  address: string;
+  locality: string;
+  pinCode: number;
+  city: string;
+  state: string;
+  photoURL: string;
+  websiteURL: string;
+  classType?: string;
+  __v: number;
 }

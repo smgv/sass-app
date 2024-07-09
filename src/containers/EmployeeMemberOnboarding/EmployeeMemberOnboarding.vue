@@ -259,6 +259,7 @@ const currentOnboardingState = ref(MEMBER_EMPLOYEE_FORM.EMAIL);
 const emailData = ref("");
 const adminEmail = ref("");
 const formLoading = ref(false);
+const classTypeData = ref("");
 
 const isEmployee = computed(
   () => route.name === ROUTES_NAME.EMPLOYEE_ONBOARDING
@@ -267,15 +268,23 @@ const isEmployee = computed(
 onMounted(async () => {
   loading.value = true;
   const { params } = route;
-  const resp = await memberStore.getMember(params.token as string);
-  emailData.value = resp.email;
-  adminEmail.value = resp.customData.adminEmail;
-  loading.value = false;
-  if (resp.email) {
-    (await isEmployee)
-      ? employeeStore.getEmployeeOnboardingStatus(resp.email)
-      : memberStore.getMemberOnboardingStatus(resp.email);
+  if (isEmployee.value) {
+    const resp = await employeeStore.getEmployee(params.token as string);
+    emailData.value = resp.email;
+    adminEmail.value = resp.customData.adminEmail;
+    if (resp.email) {
+      employeeStore.getEmployeeOnboardingStatus(resp.email);
+    }
+  } else {
+    const resp = await memberStore.getMember(params.token as string);
+    emailData.value = resp.email;
+    adminEmail.value = resp.customData.adminEmail;
+    classTypeData.value = resp.customData.classType;
+    if (resp.email) {
+      memberStore.getMemberOnboardingStatus(resp.email);
+    }
   }
+  loading.value = false;
 });
 
 const onboardingFormData = ref<MemberEmployeeFormType>({
@@ -460,6 +469,7 @@ const handlePasswordForm = async () => {
           email: emailData.value,
           ...onboardingFormData.value,
           password: passwordData.value.password,
+          classType: classTypeData.value,
         },
         adminEmail.value
       );
