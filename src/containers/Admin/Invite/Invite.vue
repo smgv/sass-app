@@ -267,8 +267,9 @@ const handleInvite = async () => {
       InviteFormData.value = { ...INVITE_FORM_INITIAL_STATE };
       v$.value.$reset();
       const res = await inviteStore.getInviteList();
+      console.log(res);
       if (res) {
-        inviteList.value = inviteStore.inviteList;
+        inviteList.value = res;
       }
     }
   } catch (error) {

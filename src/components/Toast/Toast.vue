@@ -1,30 +1,30 @@
 <template>
   <transition name="fade">
-    <div v-if="toastMessage.message" :class="[ToastClasses]">
-      <div class="flex items-center justify-between w-full">
-        <div class="flex items-center">
-          <span :class="[iconClasses]"></span>
-          <span class="ml-2">{{ toastMessage.message }}</span>
-        </div>
-        <button
-          @click="deleteToastMessage"
-          class="text-gray-500 focus:outline-none hover:text-gray-700"
+    <div
+      v-if="toastMessage.message"
+      :class="[ToastClasses]"
+      class="flex items-center justify-center gap-x-2"
+    >
+      <i :class="icons" class="text-xl font-bold" />
+      <span class="text-base font-normal">{{ toastMessage.message }}</span>
+      <button
+        @click="deleteToastMessage"
+        class="text-white focus:outline-none hover:bg-gray-800 p-1 rounded-full"
+      >
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
         >
-          <svg
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            ></path>
-          </svg>
-        </button>
-      </div>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
     </div>
   </transition>
 </template>
@@ -55,32 +55,28 @@ watch(toastMessage.value, (val) => {
 });
 const ToastClasses = computed(() => {
   return {
-    "bg-green-500": toastMessage.value.type === "success",
-    "bg-yellow-500": toastMessage.value.type === "warning",
-    "bg-red-500": toastMessage.value.type === "failed",
+    "bg-green-600": toastMessage.value.type === "success",
+    "bg-yellow-600": toastMessage.value.type === "warning",
+    "bg-red-600": toastMessage.value.type === "failed",
     "text-white": true,
-    "px-4": true,
-    "py-2": true,
-    rounded: true,
+    "p-4": true,
+    "rounded-xl": true,
     "shadow-md": true,
     absolute: true,
-    "bottom-4": true,
-    "left-4": true,
+    "top-4": true,
+    "right-4": true,
+    "z-20": true,
   };
 });
 
-const iconClasses = computed(() => {
-  return {
-    "text-white": true,
-    "mr-2": true,
-    "h-5": true,
-    "w-5": true,
-    "fill-current": true,
-    "rounded-full": true,
-    "bg-white": toastMessage.value.type === "success",
-    "bg-yellow-100": toastMessage.value.type === "warning",
-    "bg-red-100": toastMessage.value.type === "failed",
-  };
+const icons = computed(() => {
+  if (toastMessage.value.type === "success") {
+    return "mdi mdi-check-circle-outline";
+  } else if (toastMessage.value.type === "warning") {
+    return "mdi mdi-alert-circle-outline";
+  } else if (toastMessage.value.type === "failed") {
+    return "mdi mdi-close-circle-outline";
+  }
 });
 </script>
 

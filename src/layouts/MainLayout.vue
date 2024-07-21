@@ -2,7 +2,10 @@
   <div class="h-screen w-full flex relative">
     <!-- Mobile View -->
     <Sidebar :open="openSidebar" @on-close="openSidebar = false">
-      <SideNavbar @on-logout="logout()"></SideNavbar>
+      <SideNavbar
+        @on-logout="logout()"
+        @on-click="openSidebar = false"
+      ></SideNavbar>
     </Sidebar>
     <!-- Desktop View -->
     <section class="hidden sm:flex sm:fixed sm:top-0 sm:left-0 sm:h-full">

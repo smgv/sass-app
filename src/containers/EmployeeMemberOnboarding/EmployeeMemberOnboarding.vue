@@ -455,11 +455,13 @@ const handlePasswordForm = async () => {
     if (!isValid) return;
     console.log(passwordData.value, emailData.value, onboardingFormData.value);
     if (isEmployee.value) {
+      console.log(onboardingFormData.value);
       await employeeStore.postEmployee(
         {
           email: emailData.value,
           ...onboardingFormData.value,
           password: passwordData.value.password,
+          role: ROLES.EMPLOYEE as "Employee",
         },
         adminEmail.value
       );
@@ -470,6 +472,7 @@ const handlePasswordForm = async () => {
           ...onboardingFormData.value,
           password: passwordData.value.password,
           classType: classTypeData.value,
+          role: ROLES.MEMBER as "Member",
         },
         adminEmail.value
       );

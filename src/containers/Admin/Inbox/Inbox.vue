@@ -18,7 +18,7 @@
       />
     </form>
 
-    <div class="flex flex-col gap-4 h-[calc(100dvh_-_236px)] overflow-y-auto">
+    <div class="flex flex-col gap-4 h-[calc(100dvh_-_290px)] overflow-y-auto">
       <div
         v-for="(inbox, idx) in filteredInboxList"
         :key="idx"
@@ -51,7 +51,7 @@
 
         <!-- Form -->
         <form class="flex flex-col gap-4">
-          <div class="flex items-center gap-6">
+          <!-- <div class="flex items-center gap-6">
             <div class="flex items-center gap-3 text-left">
               <label class="text-base capitalize text-gray-500">
                 To All Members
@@ -72,7 +72,7 @@
                 :checked="InboxFormData.allEmployees"
               />
             </div>
-          </div>
+          </div> -->
 
           <TextField
             v-model="InboxFormData.to"

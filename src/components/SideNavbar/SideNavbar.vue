@@ -67,9 +67,11 @@ const getRoute = (name: string) => {
   return `/admin/${name}`;
 };
 const handleNavigation = (navigate: () => void) => {
+  console.log("name");
+  emits("onClick");
   navigate();
 };
-const emits = defineEmits(["onLogout"]);
+const emits = defineEmits(["onLogout", "onClick"]);
 </script>
 
 <style scoped></style>
