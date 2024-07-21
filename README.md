@@ -1,9 +1,12 @@
-# Vue 3 + TypeScript + Vite
+# GymSync
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+- GymSync is a powerful and intuitive platform designed to streamline the management of your gym. With GymSync, gym owners can efficiently handle all aspects of their business from one centralized location.
 
-## Recommended Setup
+## Key Features:
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (previously Volar) and disable Vetur
-
-- Use [vue-tsc](https://github.com/vuejs/language-tools/tree/master/packages/tsc) for performing the same type checking from the command line, or for generating d.ts files for SFCs.
+- Membership Management: Easily track and manage gym memberships, including renewals, cancellations, and member profiles.
+- Employee Data: Keep detailed records of staff information, schedules, and payroll.
+- Member Data: Access and update member profiles, track attendance, and monitor fitness progress.
+- Email Tracking: Review and manage all the emails sent from the platform to ensure effective communication with members and staff.
+- Timetable Management: Organize and manage gym classes and schedules, ensuring smooth operation and optimal member experience.
+- GymSync is designed with simplicity and efficiency in mind, making it the ultimate tool for gym owners to optimize their operations and enhance member satisfaction.
