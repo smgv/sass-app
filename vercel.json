@@ -4,7 +4,7 @@
       "config": {
         "distDir": "dist"
       },
-      "src": "src/**/*",
+      "src": "package.json",
       "use": "@vercel/static-build"
     }
   ],
@@ -13,5 +13,6 @@
       "dest": "/index.html",
       "src": "/(.*)"
     }
-  ]
+  ],
+  "version": 2
 }
