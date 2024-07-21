@@ -207,8 +207,23 @@ export const useAuthStore = defineStore(
       router.push(ROUTES.DEFAULT);
     };
 
+    const redirectHandler = async (code: unknown) => {
+      try {
+        console.log(code, "CODE");
+        const resp = await axiosInstance.get(`/auth/oauth/google?code=${code}`);
+        return resp;
+      } catch (error) {
+        console.error("Auth RedirectHandler Error:", error);
+      }
+    };
+
+    const setUser = (user: UserAuthType) => {
+      userAuth.value = user;
+    };
+
     return {
       userAuth,
+      setUser,
       tokenAuth,
       signUp,
       signIn,
@@ -220,6 +235,7 @@ export const useAuthStore = defineStore(
       isAuthenticated,
       logout,
       isUserOnBoarded,
+      redirectHandler,
     };
   },
   {

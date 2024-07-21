@@ -29,3 +29,27 @@ export const userOnboardingStatus = () => {
   const data = getItemInLocalStorage("__persisted__sass_app_auth");
   return data?.userAuth?.onboardingId || null;
 };
+
+export const googleAuthRedirect = (): string => {
+  const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+
+  console.log(
+    import.meta.env.VITE_APP_GOOGLE_REDIRECT_URL,
+    "import.meta.env.VITE_APP_GOOGLE_REDIRECT_URL"
+  );
+
+  const options = {
+    redirect_uri: import.meta.env.VITE_APP_REDIRECT_URL as string,
+    client_id: import.meta.env.VITE_APP_GOOGLE_CLIENT_ID as string,
+    access_type: "offline",
+    response_type: "code",
+    prompt: "consent",
+    scope: "https://www.googleapis.com/auth/userinfo.email" as string,
+  };
+
+  console.log(options);
+
+  const qs = new URLSearchParams(options);
+
+  return `${rootUrl}?${qs.toString()}`;
+};

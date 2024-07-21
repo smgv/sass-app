@@ -9,6 +9,7 @@ export const ROUTES_NAME = {
   EMPLOYEE_ONBOARDING: "employee-onboarding",
   ADMIN: "admin",
   ONBOARDING_STATUS: "onboarding-status",
+  REDIRECT: "redirect",
 };
 
 export const ROUTES = {
@@ -20,4 +21,5 @@ export const ROUTES = {
   EMPLOYEE_ONBOARDING: "/employee-onboarding/:token",
   ADMIN: "/admin",
   ONBOARDING_STATUS: "/onboarding-status",
+  REDIRECT: "/auth/redirect",
 };

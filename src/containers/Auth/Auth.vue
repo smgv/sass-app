@@ -1,6 +1,8 @@
 <template>
   <div class="w-full h-screen flex flex-col justify-center items-center">
-    <p class="italic text-3xl text-gray-300 mb-6">logo</p>
+    <p class="italic text-3xl text-gray-300 mb-6">
+      <img src="/gymsync.png" class="w-36 h-20" />
+    </p>
     <form
       class="sm:bg-white sm:rounded-2xl sm:shadow-md p-6 w-full sm:w-[450px] flex flex-col gap-4 sm:border sm:border-gray-300"
     >
@@ -8,7 +10,7 @@
         v-if="currentAuthForm === AUTH_FORM.REGISTER"
         class="text-base text-gray-500 font-semibold text-center"
       >
-        Sign Up to access the SASS app
+        Sign Up to access the GymSync
       </p>
 
       <i
@@ -121,6 +123,7 @@
         v-if="[AUTH_FORM.LOGIN, AUTH_FORM.REGISTER].includes(currentAuthForm)"
         size="md"
         variant="outlined"
+        @click.prevent.stop="handleGoogleLogin"
       >
         Continue with Google
       </Button>
@@ -195,7 +198,11 @@ import {
   ForgotPasswordTextType,
   SwitchAccountTextType,
 } from "@/types/auth";
-import { isConfirmPasswordValid, isPasswordValid } from "@/utils/auth";
+import {
+  googleAuthRedirect,
+  isConfirmPasswordValid,
+  isPasswordValid,
+} from "@/utils/auth";
 import { useAuthStore } from "@/store/authStore";
 
 const AuthFormData = ref<AuthFormType>({ ...AUTH_FORM_INITIAL_STATE });
@@ -331,6 +338,12 @@ const handleForgotPassword = () => {
   currentAuthForm.value = AUTH_FORM.FORGOT_PASSWORD_EMAIL;
   AuthFormData.value = { ...AUTH_FORM_INITIAL_STATE };
   v$.value.$reset();
+};
+
+const handleGoogleLogin = () => {
+  const url = googleAuthRedirect();
+  console.log("Google Auth URL", url);
+  window.open(url, "_blank");
 };
 </script>
 

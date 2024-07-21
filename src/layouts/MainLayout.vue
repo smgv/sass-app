@@ -15,7 +15,7 @@
       <nav
         class="h-16 bg-primary-900 px-6 py-3 flex sm:hidden items-center justify-between text-white fixed w-full z-10"
       >
-        <p>SASS APP</p>
+        <p>GymSync</p>
         <i
           :class="[
             `mdi ${

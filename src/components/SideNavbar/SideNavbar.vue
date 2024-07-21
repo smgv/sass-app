@@ -1,6 +1,9 @@
 <template>
   <aside class="flex flex-col w-[250px] bg-primary-900 text-white p-6 h-full">
-    <p class="text-xl font-normal">SASS APP</p>
+    <div class="flex items-center gap-x-2">
+      <img src="/gymsync.png" alt="GymSync Logo" class="h-10 w-20" />
+      <p class="text-xl font-normal">GymSync</p>
+    </div>
     <div class="h-0.5 w-full bg-gold my-6" />
     <ul class="flex flex-grow flex-col gap-5 text-lg">
       <li v-for="(item, index) in adminNavItems" :key="index">

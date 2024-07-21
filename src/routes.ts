@@ -18,6 +18,12 @@ const router = createRouter({
       meta: { requiresAuth: false },
     },
     {
+      path: ROUTES.REDIRECT,
+      name: ROUTES_NAME.REDIRECT,
+      component: () => import("@/views/Redirect.vue"),
+      meta: { requiresAuth: false },
+    },
+    {
       path: ROUTES.RESET_PASSWORD,
       name: ROUTES_NAME.RESET_PASSWORD,
       component: () => import("@/views/ResetPassword.vue"),
@@ -101,14 +107,14 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to, _, next) => {
-  const authStore = useAuthStore();
-  console.log("ROUTES", authStore.isUserOnBoarded());
-  if (to.meta.requiresAuth && !authStore.isAuthenticated()) {
-    next({ path: ROUTES.DEFAULT });
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, _, next) => {
+//   const authStore = useAuthStore();
+//   console.log("ROUTES", authStore.isUserOnBoarded());
+//   if (to.meta.requiresAuth && !authStore.isAuthenticated()) {
+//     next({ path: ROUTES.DEFAULT });
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;
