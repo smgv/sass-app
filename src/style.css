@@ -1,3 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=Andika:ital,wght@0,400;0,700;1,400;1,700&family=Inter:slnt,wght@-10..0,100..900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --app-primary-900: #03045eff;
+    --app-primary-800: #023e8aff;
+    --app-primary-700: #0077b6ff;
+    --app-primary-600: #0096c7ff;
+    --app-primary-500: #00b4d8ff;
+    --app-primary-400: #48cae4ff;
+    --app-primary-300: #90e0efff;
+    --app-primary-200: #ade8f4ff;
+    --app-primary-100: #caf0f8ff;
+
+    --app-gray-900: #111928;
+    --app-gray-800: #1f2a37;
+    --app-gray-700: #374151;
+    --app-gray-600: #4b5563;
+    --app-gray-500: #6b7280;
+    --app-gray-400: #9ca3af;
+    --app-gray-300: #d1d5db;
+    --app-gray-200: #e5e7eb;
+    --app-gray-100: #f3f4f6;
+    --app-gray-50: #f9fafb;
+
+    --app-success: #30cca4;
+    --app-warning: #fbc94a;
+    --app-error: #fb4a61;
+    --app-info: #d4d4d4;
+    --app-white: #ffffff;
+    --app-gold: #ffbc42;
+
+    html body {
+      font-family: Andika;
+      height: 100%;
+    }
+    body {
+      background-color: #f9fafb;
+      min-height: 100vh;
+    }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+    }
+  }
+}
